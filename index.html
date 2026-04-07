@@ -707,9 +707,8 @@
     stroke: var(--accent);
     stroke-width: 8;
     stroke-linecap: round;
-    stroke-dasharray: 440;
-    stroke-dashoffset: 440;
-    transition: stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
+    stroke-dasharray: 439.82;
+    stroke-dashoffset: 439.82;
     filter: drop-shadow(0 0 8px rgba(0,229,255,0.6));
   }
 
@@ -1857,6 +1856,10 @@ function showScore() {
 
   const circumference = 2 * Math.PI * 70;
   const ring = document.getElementById('scoreRingFill');
+
+  // Reset ring with no transition so it starts empty
+  ring.style.transition = 'none';
+  ring.style.strokeDasharray = circumference;
   ring.style.strokeDashoffset = circumference;
   ring.style.stroke = g.color;
 
@@ -1878,10 +1881,12 @@ function showScore() {
 
   showScreen('scoreScreen');
 
-  // Animate ring
-  setTimeout(() => {
+  // Force layout flush, then animate ring
+  ring.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    ring.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1)';
     ring.style.strokeDashoffset = circumference * (1 - pct / 100);
-  }, 100);
+  });
 }
 
 // ── Fullscreen toggle ──
