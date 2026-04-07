@@ -29,6 +29,33 @@
     overflow-x: hidden;
   }
 
+  /* Fullscreen toggle */
+  .fullscreen-btn {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 998;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    line-height: 1;
+  }
+  .fullscreen-btn:hover, .fullscreen-btn:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    outline: none;
+  }
+
   /* Scanline overlay */
   body::after {
     content: '';
@@ -890,6 +917,7 @@
 </head>
 <body>
 <div class="bg-grid"></div>
+<button class="fullscreen-btn" id="fullscreenBtn" aria-label="Toggle fullscreen" title="Toggle fullscreen">⤢</button>
 
 <div id="app">
   <!-- GLOBAL HEADER (hidden on splash) -->
@@ -1855,6 +1883,27 @@ function showScore() {
     ring.style.strokeDashoffset = circumference * (1 - pct / 100);
   }, 100);
 }
+
+// ── Fullscreen toggle ──
+const fsBtn = document.getElementById('fullscreenBtn');
+function isFullscreen() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+function updateFsIcon() {
+  fsBtn.textContent = isFullscreen() ? '⤡' : '⤢';
+}
+fsBtn.addEventListener('click', async () => {
+  try {
+    if (isFullscreen()) {
+      await (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      const el = document.documentElement;
+      await (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    }
+  } catch (_) { /* iOS Safari / unsupported — fail silently */ }
+});
+document.addEventListener('fullscreenchange', updateFsIcon);
+document.addEventListener('webkitfullscreenchange', updateFsIcon);
 </script>
 </body>
 </html>
