@@ -1130,7 +1130,21 @@ function showScreen(id) {
   document.getElementById('gameHeader').style.display = (id === 'splashScreen') ? 'none' : 'flex';
 }
 
-function goHome() { showScreen('splashScreen'); }
+function goHome() {
+  currentScenario = null;
+  currentStep = 0;
+  gameScore = { total: 0, max: 0, details: [] };
+  health = 100;
+  stepData = {};
+  lastScenario = null;
+  const btn = document.getElementById('mainActionBtn');
+  btn.onclick = handleMainAction;
+  btn.textContent = 'Check →';
+  btn.disabled = false;
+  document.getElementById('interactionContainer').innerHTML = '';
+  hideFeedback();
+  showScreen('splashScreen');
+}
 
 function retryScenario() {
   if (lastScenario) startScenario(lastScenario);
@@ -1163,6 +1177,10 @@ function startScenario(id) {
   updateHealth(0);
   gameScore = { total: 0, max: 0, details: [] };
   stepData = {};
+  const btn = document.getElementById('mainActionBtn');
+  btn.onclick = handleMainAction;
+  btn.textContent = 'Check →';
+  btn.disabled = false;
 
   const s = SCENARIOS[id];
   document.getElementById('sceneIcon').textContent = s.icon;
@@ -1201,6 +1219,7 @@ function advanceDot() {
 // ============================================================
 function renderStep() {
   const container = document.getElementById('interactionContainer');
+  container.innerHTML = '';
   const btn = document.getElementById('mainActionBtn');
   hideFeedback();
   btn.textContent = 'Check →';
