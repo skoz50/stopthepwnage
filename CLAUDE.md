@@ -48,12 +48,22 @@ Three screens toggled via `showScreen(id)` — only one `.active` at a time:
 - `gameScreen` — active scenario with step progress dots
 - `scoreScreen` — results ring, breakdown, key takeaways
 
+### Fullscreen Toggle
+A fixed-position button (top-right corner) lets users enter/exit fullscreen via the
+browser Fullscreen API. Includes a graceful fallback for iOS Safari (`webkitEnterFullscreen`).
+Styled to match the cyberpunk aesthetic with a glow effect on hover.
+
 ### Scenario Flow
-1. User picks a scenario card → `startScenario(id)` resets all state
-2. `renderStep()` dispatches to the correct scenario renderer based on `currentScenario`
+1. User picks a scenario card → `startScenario(id)` resets **all** global state and restores `mainActionBtn.onclick`
+2. `renderStep()` clears `interactionContainer`, then dispatches to the correct scenario renderer
 3. User interacts with the rendered UI (typing, clicking, toggling)
 4. `handleMainAction()` evaluates the interaction, updates `gameScore` and `health`, shows feedback
 5. After last step → score screen with animated ring, per-step breakdown, and key learnings
+6. `goHome()` fully resets all state so the splash screen is clean for the next scenario
+
+**Important:** Both `startScenario()` and `goHome()` perform a full state reset (all global
+variables, button handler, DOM). This was an intentional bug fix — do not revert or simplify
+this reset logic. Without it, stale state from a completed scenario bleeds into subsequent runs.
 
 ### State Variables
 ```js
@@ -155,7 +165,6 @@ git add . && git commit -m "describe your change" && git push origin main
 - [ ] Shareable score card (generate a PNG or URL with result)
 - [ ] Leaderboard (would require a lightweight backend or Cloudflare Worker + KV)
 - [ ] About/info page wrapper with nav (currently pure game, no chrome)
-- [ ] Connect Amplify to GitHub for auto-deploy (currently manual zip upload)
 - [ ] Add Buy Me a Coffee or attribution footer
 
 ## Owner
