@@ -652,6 +652,12 @@
     color: #a0e8f0;
   }
 
+  .feedback-banner.warn {
+    background: rgba(255,184,0,0.1);
+    border: 1px solid rgba(255,184,0,0.3);
+    color: #ffe0a0;
+  }
+
   .feedback-banner b { font-weight: 800; }
 
   /* Action row */
@@ -832,6 +838,11 @@
     background: rgba(0,229,255,0.05);
   }
 
+  .mfa-option.selected {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.08);
+  }
+
   .mfa-option.selected.correct {
     border-color: var(--good);
     background: rgba(0,230,118,0.08);
@@ -864,16 +875,6 @@
   .mfa-icon { font-size: 2rem; margin-bottom: 10px; }
   .mfa-label { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; }
   .mfa-desc { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
-
-  .security-rank {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    padding: 2px 6px;
-    border-radius: 3px;
-  }
 
   .selected-check {
     position: absolute;
@@ -1523,10 +1524,10 @@ function toggleBreach(i) {
 //  MFA SCENARIO
 // ============================================================
 const MFA_OPTIONS = [
-  { icon: '💬', label: 'SMS Text Code', desc: 'Get a code texted to your phone number each time you log in.', securityLevel: 2, rank: 'Low-Medium', rankClass: 'diff-medium', correct: false },
-  { icon: '📧', label: 'Email Code', desc: 'A one-time code is sent to your email address.', securityLevel: 1, rank: 'Low', rankClass: 'diff-easy', correct: false },
-  { icon: '📱', label: 'Authenticator App', desc: 'An app on your phone generates a time-based code every 30 seconds.', securityLevel: 4, rank: 'High', rankClass: 'diff-hard', correct: true },
-  { icon: '🔐', label: 'Hardware Key (YubiKey)', desc: 'A physical USB/NFC key you plug in or tap to authenticate.', securityLevel: 5, rank: 'Highest', rankClass: 'diff-hard', correct: false },
+  { icon: '💬', label: 'SMS Text Code', desc: 'Get a code texted to your phone number each time you log in.', securityLevel: 2, correct: false, explanation: 'Vulnerable to SIM-swapping attacks where criminals convince your carrier to transfer your number. Also interceptable via SS7 network flaws. Better than nothing, but the weakest common 2FA method.' },
+  { icon: '📧', label: 'Email Code', desc: 'A one-time code is sent to your email address.', securityLevel: 1, correct: false, explanation: 'If an attacker compromises your email, they also get your 2FA codes — defeating the entire purpose. Email is often the weakest link in your security chain.' },
+  { icon: '📱', label: 'Authenticator App', desc: 'An app on your phone generates a time-based code every 30 seconds.', securityLevel: 4, correct: true, explanation: 'Codes are generated locally on your device, so they can\'t be intercepted in transit. Phishing-resistant, works offline, and doesn\'t depend on your phone number. The best balance of security and everyday usability.' },
+  { icon: '🔐', label: 'Hardware Key (YubiKey)', desc: 'A physical USB/NFC key you plug in or tap to authenticate.', securityLevel: 5, correct: false, explanation: 'The strongest option — immune to phishing because it cryptographically verifies the website domain. However, keys can be lost or forgotten, cost money, and aren\'t supported everywhere. Overkill for most everyday use.' },
 ];
 
 function renderMFAStep(c, btn) {
@@ -1540,7 +1541,6 @@ function renderMFAStep(c, btn) {
           ${MFA_OPTIONS.map((opt, i) => `
             <div class="mfa-option" id="mfa-opt-${i}" onclick="selectMFA(${i})">
               <div class="selected-check">✓</div>
-              <span class="security-rank ${opt.rankClass}">${opt.rank}</span>
               <div class="mfa-icon">${opt.icon}</div>
               <div class="mfa-label">${opt.label}</div>
               <div class="mfa-desc">${opt.desc}</div>
@@ -1556,14 +1556,16 @@ function renderMFAStep(c, btn) {
         <div class="zone-label">Security Ranking Explained</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           ${[...MFA_OPTIONS].sort((a,b) => b.securityLevel - a.securityLevel).map(opt => `
-            <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;">
-              <span style="font-size:1.5rem;">${opt.icon}</span>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;">
+              <span style="font-size:1.5rem;margin-top:2px;">${opt.icon}</span>
               <div style="flex:1">
-                <div style="font-weight:700;font-size:0.9rem;">${opt.label}</div>
-                <div style="color:var(--muted);font-size:0.78rem;margin-top:3px;">${opt.desc}</div>
-              </div>
-              <div style="display:flex;gap:2px;">
-                ${Array(5).fill(0).map((_,i) => `<div style="width:6px;height:22px;border-radius:3px;background:${i < opt.securityLevel ? 'var(--accent)' : 'var(--border)'};"></div>`).join('')}
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                  <span style="font-weight:700;font-size:0.9rem;">${opt.label}</span>
+                  <span style="display:flex;gap:2px;">
+                    ${Array(5).fill(0).map((_,i) => `<span style="display:inline-block;width:6px;height:16px;border-radius:3px;background:${i < opt.securityLevel ? 'var(--accent)' : 'var(--border)'};"></span>`).join('')}
+                  </span>
+                </div>
+                <div style="color:var(--text);font-size:0.8rem;line-height:1.5;">${opt.explanation}</div>
               </div>
             </div>
           `).join('')}
@@ -1583,16 +1585,24 @@ function selectMFA(i) {
   });
   const el = document.getElementById('mfa-opt-' + i);
   if (el) {
-    el.className = 'mfa-option selected ' + (MFA_OPTIONS[i].correct ? 'correct' : 'wrong');
-    if (!MFA_OPTIONS[i].correct) {
-      setTimeout(() => {
-        MFA_OPTIONS.forEach((opt, j) => {
-          if (opt.correct) {
-            document.getElementById('mfa-opt-' + j).className = 'mfa-option highlight-correct';
-          }
-        });
-      }, 600);
-    }
+    el.className = 'mfa-option selected';
+  }
+}
+
+function revealMFAAnswer(chosenIndex) {
+  const chosen = MFA_OPTIONS[chosenIndex];
+  const el = document.getElementById('mfa-opt-' + chosenIndex);
+  if (el) {
+    el.className = 'mfa-option selected ' + (chosen.correct ? 'correct' : 'wrong');
+  }
+  if (!chosen.correct) {
+    setTimeout(() => {
+      MFA_OPTIONS.forEach((opt, j) => {
+        if (opt.correct) {
+          document.getElementById('mfa-opt-' + j).className = 'mfa-option highlight-correct';
+        }
+      });
+    }, 600);
   }
 }
 
@@ -1786,15 +1796,16 @@ function handleMFAAction(isLast) {
     gameScore.max += 30;
     gameScore.details.push({ label: 'MFA Choice', score: pts, max: 30 });
 
-    // Lock selections so user can't change after submitting
+    // Lock selections and reveal correct/wrong styling
     stepData.mfaLocked = true;
+    revealMFAAnswer(stepData.mfaSelected);
     document.querySelectorAll('.mfa-option').forEach(el => el.style.pointerEvents = 'none');
 
     if (chosen.correct) {
       showFeedback('good', `<b>Best choice for everyday use!</b> Authenticator apps are phishing-resistant, don't rely on your phone number, and work even without cell service. They're strongly recommended by security experts.`);
       updateHealth(10);
     } else if (chosen.label === 'Hardware Key (YubiKey)') {
-      showFeedback('good', `<b>Maximum security!</b> Hardware keys are the strongest option available. However, they can be lost and aren't always practical for everyday use. Authenticator apps are the recommended balance of security and usability.`);
+      showFeedback('warn', `<b>Great security, but not the best everyday choice.</b> Hardware keys are the strongest option available — immune to phishing. However, they can be lost, cost money, and aren't supported everywhere. For most people, an authenticator app is the recommended balance of security and usability.`);
       updateHealth(5);
     } else {
       showFeedback('bad', `<b>${chosen.label} has weaknesses.</b> ${chosen.label === 'SMS Text Code' ? 'SIM-swapping attacks can let criminals hijack your texts.' : 'If your email is compromised, the attacker also gets your 2FA codes.'} An authenticator app is much safer.`);
