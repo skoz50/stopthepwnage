@@ -1,42 +1,136 @@
-# StopThePwnage.com
+# 🛡️ StopThePwnage.com
 
-A hands-on cybersecurity awareness game that teaches real-world security skills through interactive scenarios. Instead of reading about threats, players make decisions, spot red flags, and learn from immediate feedback.
+**Cybersecurity awareness through play.** An open-source game hub that teaches real-world security skills through hands-on, interactive challenges — not lectures.
 
-**Play it now:** [stopthepwnage.com](https://stopthepwnage.com)
+🌐 **Live at [stopthepwnage.com](https://stopthepwnage.com)**
 
-## Scenarios
+## Games
 
-Scenarios are ordered from Easy to Hard to guide players through a natural progression:
+### 🛡️ DataGuard — Scenario Challenges
+*Solo · Self-paced*
 
-| # | Scenario | What You'll Learn | Difficulty |
-|---|----------|-------------------|------------|
-| 1 | Password Fortress | Crafting strong passwords and passphrases that resist brute-force attacks | Easy |
-| 2 | Two-Factor Thinking | Choosing the most secure MFA methods to protect your accounts | Easy |
-| 3 | Phishing Hunt | Identifying red flags in suspicious emails before clicking anything | Medium |
-| 4 | App Permissions | Deciding which permissions to grant or deny when installing apps | Medium |
-| 5 | Data Breach Triage | Classifying sensitive vs. safe data when your information is compromised | Hard |
+Five interactive scenarios covering the fundamentals of personal cybersecurity:
 
-## How It Works
+- **Password Fortress** — Build strong passwords and passphrases, recover from breaches
+- **Two-Factor Thinking** — Choose the right MFA method for the situation
+- **Phishing Hunt** — Spot red flags in suspicious emails and identify fakes
+- **App Permissions** — Decide what access apps really need
+- **Data Breach Triage** — Classify sensitive vs. safe data under pressure
 
-Players select a scenario from the main screen and work through interactive steps — typing passwords, clicking suspicious elements in a mock email, toggling app permissions, and more. Each action is scored in real time with feedback explaining *why* a choice was good or bad. At the end, a score breakdown highlights what you got right and what to watch for next time.
+Includes a **proctored mode** for classroom and booth deployments — hides navigation during play, adds a reset flow between students.
 
-### Key Features
+### ⚡ Exploit Jeopardy
+*Instructor-led · Group play*
 
-- **Strength-gated password scoring** — Length is the primary factor. Short passwords can never rate above "Weak" regardless of character variety. Includes confirm-password validation and breached password reuse detection.
-- **Dedicated passphrase evaluator** — The passphrase step validates word count, separators, total length, and detects common sentences rather than reusing traditional password scoring.
-- **Fair challenge design** — Answers are never revealed before submission. MFA rankings are hidden during selection, phishing red flags don't change cursor on hover, and the Real vs. Fake email step defers its reveal.
-- **Data Breach classification** — Explicit "Sensitive" / "Safe" buttons per item (not click-to-cycle). All items must be classified before submission.
-- **Completion tracking** — Completed scenarios show a score badge on the card. Cards remain replayable and track your best score.
-- **Proctored mode** — A subtle toggle at the bottom of the splash screen enables classroom use. Hides navigation during gameplay and requires confirmation before resetting progress for the next student.
+A Jeopardy-style trivia board designed for live sessions. Project it on a screen, click through questions, reveal answers, and track team scores. Five categories, 25 questions, 200–1000 point values.
+
+Categories: Password Sins · Phish or Legit · Lock It Down · Breach Aftermath · Social Engineering
+
+### 🤺 Hacked Feud
+*Instructor-led or Solo*
+
+Family Feud meets cybersecurity. Two play modes:
+
+- **Team Battle** — Facilitator reads questions, teams guess, strike system, manual scoring
+- **Solo Play** — Type your guesses with fuzzy matching, track your own score
+
+Five rounds of ranked answers based on real-world cybersecurity survey-style questions.
 
 ## Tech Stack
 
-- **Frontend:** Single-file vanilla HTML/CSS/JS — no frameworks, no build step
-- **Fonts:** Space Mono + Syne via Google Fonts CDN
-- **Hosting:** AWS Amplify with auto-deploy on push to `main`
+- **Frontend:** Vanilla HTML/CSS/JS — no frameworks, no build step, no dependencies
+- **Shared theme:** CSS custom properties in `shared/theme.css` — dark cyberpunk aesthetic with animated grid background and scanline overlay
+- **Fonts:** [Space Mono](https://fonts.google.com/specimen/Space+Mono) + [Syne](https://fonts.google.com/specimen/Syne) via Google Fonts CDN
+- **Hosting:** AWS Amplify — auto-deploys on push to `main`
 - **DNS:** Cloudflare
-- **Design:** Dark cyberpunk/terminal aesthetic with CSS custom properties, animated grid background, and scanline overlay
+
+## Project Structure
+
+```
+stopthepwnage/
+├── index.html           ← Hub page (game picker)
+├── shared/
+│   └── theme.css        ← Shared design tokens & base styles
+├── dataguard/
+│   └── index.html       ← DataGuard scenario game
+├── jeopardy/
+│   └── index.html       ← Exploit Jeopardy
+├── feud/
+│   └── index.html       ← Hacked Feud
+├── CLAUDE.md            ← AI assistant context file
+├── LICENSE              ← MIT
+└── README.md            ← You are here
+```
+
+Each game is a single, self-contained HTML file. No bundler, no node_modules, no build step. Clone it, open it, it works.
+
+## Customizing Content
+
+### Exploit Jeopardy
+Edit the `CATEGORIES` array at the top of `jeopardy/index.html`:
+
+```js
+const CATEGORIES = [
+  {
+    name: "Your Category",
+    questions: [
+      { value: 200, question: "Your question", answer: "Your answer" },
+      // ...
+    ]
+  },
+  // ...
+];
+```
+
+### Hacked Feud
+Edit the `ROUNDS` array at the top of `feud/index.html`:
+
+```js
+const ROUNDS = [
+  {
+    question: "Your survey question",
+    answers: [
+      { text: "Top answer", points: 42 },
+      { text: "Second answer", points: 28 },
+      // ...
+    ]
+  },
+  // ...
+];
+```
+
+## For Facilitators
+
+Both Exploit Jeopardy and Hacked Feud are designed for projection:
+
+- **Direct links work** — bookmark `stopthepwnage.com/jeopardy/` or `stopthepwnage.com/feud/` and go straight to the game
+- **No setup required** — open the URL, start playing
+- **Big-screen optimized** — large text, high contrast, readable from across a room
+- **Click-to-reveal answers** — no separate control view needed
+
+## Development
+
+```bash
+# Clone
+git clone https://github.com/skoz50/stopthepwnage.git
+cd stopthepwnage
+
+# Edit any HTML file directly — no build step
+
+# Deploy (if you have Amplify connected)
+git add . && git commit -m "your change" && git push origin main
+# Auto-deploys in ~1 minute
+```
+
+## Contributing
+
+Contributions welcome! The easiest ways to help:
+
+- **Write questions** for Exploit Jeopardy or Hacked Feud
+- **Report bugs** via [GitHub Issues](https://github.com/skoz50/stopthepwnage/issues)
+- **Suggest new scenarios** for DataGuard
+- **Test on different devices** and report what breaks
 
 ## License
 
-MIT
+[MIT](LICENSE) — StopThePwnage Contributors
