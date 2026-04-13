@@ -430,10 +430,10 @@
   }
 
   .red-flag.flagged {
-    background: rgba(255,59,92,0.2);
-    color: var(--danger);
-    text-decoration: underline wavy rgba(255,59,92,0.6);
-    border: 1px solid rgba(255,59,92,0.4);
+    background: rgba(0,229,255,0.15);
+    color: var(--accent);
+    text-decoration: underline wavy rgba(0,229,255,0.6);
+    border: 1px solid rgba(0,229,255,0.4);
   }
 
   .red-flag.missed-flag {
@@ -1323,7 +1323,7 @@ function renderPhishingStep(c, btn) {
             <span class="decoy" onclick="flagElement(null)">We have detected unusual activity on your PayPal account.</span> <span class="decoy" onclick="flagElement(null)">Your account will be suspended</span>
             <span id="pf3" class="red-flag" onclick="flagElement('pf3')">within 24 hours</span>
             <span class="decoy" onclick="flagElement(null)">unless you verify your identity immediately.</span><br><br>
-            <span id="pf4" class="red-flag" onclick="flagElement('pf4')">Click here to verify</span>
+            <span id="pf4" class="red-flag" onclick="flagElement('pf4')" style="color:#4a9eff;text-decoration:underline;">Click here to verify</span>
             <span class="decoy" onclick="flagElement(null)">your account now:</span><br>
             <span id="pf5" class="red-flag" onclick="flagElement('pf5')">http://paypal-verify.click/secure</span><br><br>
             <span class="decoy" onclick="flagElement(null)">Regards,</span><br>
@@ -1353,6 +1353,7 @@ function renderPhishingStep(c, btn) {
     `;
     btn.textContent = 'Continue →';
     stepData.senderSelected = false;
+    stepData.senderLocked = false;
   }
 }
 
@@ -1368,22 +1369,36 @@ function flagElement(id) {
 }
 
 function selectSender(i, isCorrect) {
+  if (stepData.senderLocked) return;
   stepData.senderSelected = true;
   stepData.senderCorrect = isCorrect;
   stepData.senderIndex = i;
   for (let j = 0; j < 4; j++) {
     const el = document.getElementById('sopt' + j);
     const tag = document.getElementById('soptTag' + j);
-    if (el) { el.className = 'breach-item'; }
-    if (tag) tag.className = 'sensitivity-tag tag-unknown';
+    if (el) el.className = 'breach-item';
+    if (tag) { tag.className = 'sensitivity-tag tag-unknown'; tag.textContent = 'Select'; }
   }
   const el = document.getElementById('sopt' + i);
   const tag = document.getElementById('soptTag' + i);
-  if (el) el.className = 'breach-item ' + (isCorrect ? 'not-sensitive' : 'sensitive');
-  if (tag) {
-    tag.className = 'sensitivity-tag ' + (isCorrect ? 'tag-safe' : 'tag-sensitive');
-    tag.textContent = isCorrect ? '✓ Legit' : '✗ Fake';
+  if (el) el.style.borderColor = 'var(--accent)';
+  if (tag) { tag.className = 'sensitivity-tag tag-unknown'; tag.textContent = 'Selected'; }
+}
+
+function revealSenderAnswer() {
+  stepData.senderLocked = true;
+  const SENDERS = ['service@paypal.com','service@paypal-security.net','paypal@secure-paypal.com','notifications@paypa1.com'];
+  for (let j = 0; j < 4; j++) {
+    const el = document.getElementById('sopt' + j);
+    const tag = document.getElementById('soptTag' + j);
+    const isReal = SENDERS[j] === 'service@paypal.com';
+    if (el) el.className = 'breach-item ' + (isReal ? 'not-sensitive' : 'sensitive');
+    if (tag) {
+      tag.className = 'sensitivity-tag ' + (isReal ? 'tag-safe' : 'tag-sensitive');
+      tag.textContent = isReal ? '✓ Legit' : '✗ Fake';
+    }
   }
+  document.querySelectorAll('#senderOptions .breach-item').forEach(el => el.style.pointerEvents = 'none');
 }
 
 // ============================================================
@@ -1682,6 +1697,7 @@ function handlePhishingAction(isLast) {
     scheduleNext(false);
   } else {
     if (!stepData.senderSelected) { showFeedback('info', 'Select one of the email addresses above.'); return; }
+    revealSenderAnswer();
     const pts = stepData.senderCorrect ? 20 : 0;
     gameScore.total += pts;
     gameScore.max += 20;
