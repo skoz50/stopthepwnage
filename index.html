@@ -3,38 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="refresh" content="1;url=/dataguard/">
-<title>StopThePwnage — Redirecting...</title>
+<title>StopThePwnage — Cybersecurity Awareness Games</title>
 <link rel="stylesheet" href="/shared/theme.css">
 <style>
-  .redirect-msg {
+  .hub {
     position: relative;
     z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    font-family: 'Space Mono', monospace;
   }
-  .redirect-msg p {
+
+  /* Header */
+  .hub-header {
+    text-align: center;
+    padding: 60px 0 48px;
+  }
+
+  .hub-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 6vw, 3.2rem);
     color: var(--accent);
-    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 30px rgba(0,229,255,0.4), 0 0 60px rgba(0,229,255,0.15);
     margin-bottom: 12px;
   }
-  .redirect-msg a {
+
+  .hub-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.8rem, 2vw, 1rem);
     color: var(--muted);
-    font-size: 0.8rem;
+    letter-spacing: 0.02em;
   }
-  .redirect-msg a:hover { color: var(--accent); }
+
+  /* Card grid */
+  .game-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-bottom: 60px;
+  }
+
+  @media (min-width: 600px) {
+    .game-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (min-width: 900px) {
+    .game-grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  /* Card base */
+  .game-card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .game-card:hover, .game-card:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: translateY(-4px);
+    outline: none;
+  }
+
+  /* Disabled card (Coming Soon) */
+  .game-card.disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* Badge */
+  .card-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+  }
+
+  .badge-solo {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.08);
+  }
+
+  .badge-instructor {
+    color: var(--warn);
+    border-color: var(--warn);
+    background: rgba(255,184,0,0.08);
+  }
+
+  .badge-soon {
+    color: var(--muted);
+    border-color: var(--muted);
+    background: rgba(100,116,139,0.08);
+  }
+
+  /* Card content */
+  .card-icon {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  .card-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .hub-footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 32px 0 20px;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .hub-footer a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .hub-footer a:hover {
+    color: var(--accent);
+  }
 </style>
 </head>
 <body>
 <div class="bg-grid"></div>
-<div class="redirect-msg">
-  <p>Redirecting to DataGuard...</p>
-  <a href="/dataguard/">Click here if not redirected</a>
+
+<div class="hub">
+  <header class="hub-header">
+    <h1 class="hub-title">STOP THE PWNAGE</h1>
+    <p class="hub-tagline">Cybersecurity awareness through play</p>
+  </header>
+
+  <div class="game-grid">
+    <a href="/dataguard/" class="game-card">
+      <span class="card-badge badge-solo">Solo</span>
+      <span class="card-icon">&#x1F6E1;&#xFE0F;</span>
+      <span class="card-name">DataGuard</span>
+      <span class="card-desc">Test your cybersecurity instincts across interactive scenarios. Passwords, phishing, permissions, breaches, and MFA.</span>
+    </a>
+
+    <a href="/jeopardy/" class="game-card">
+      <span class="card-badge badge-instructor">Instructor-Led</span>
+      <span class="card-icon">&#x26A1;</span>
+      <span class="card-name">Exploit Jeopardy</span>
+      <span class="card-desc">Project on a screen and run a live cybersecurity trivia session with your team.</span>
+    </a>
+
+    <a href="/feud/" class="game-card">
+      <span class="card-badge badge-instructor">Instructor-Led</span>
+      <span class="card-icon">&#x1F93A;</span>
+      <span class="card-name">Hacked Feud</span>
+      <span class="card-desc">Survey says... test your team's security instincts in this Family Feud-style showdown.</span>
+    </a>
+
+    <div class="game-card disabled">
+      <span class="card-badge badge-soon">Coming Soon</span>
+      <span class="card-icon">&#x1F3AD;</span>
+      <span class="card-name">Spot the Deepfake</span>
+      <span class="card-desc">Can you tell what's real? Test your ability to detect AI-generated deception.</span>
+    </div>
+  </div>
+
+  <footer class="hub-footer">
+    <span>StopThePwnage.com</span>
+    <a href="https://github.com/skoz50/stopthepwnage" target="_blank" rel="noopener">GitHub</a>
+  </footer>
 </div>
 </body>
 </html>
