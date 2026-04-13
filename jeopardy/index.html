@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exploit Jeopardy — StopThePwnage</title>
+<link rel="stylesheet" href="/shared/theme.css">
+<style>
+  /* Layout */
+  .game-wrap {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  /* Back link */
+  .back-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  /* Title */
+  .board-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: var(--accent);
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 30px rgba(0,229,255,0.4), 0 0 60px rgba(0,229,255,0.15);
+    padding: 12px 0 16px;
+  }
+
+  /* Jeopardy board */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    flex: 1;
+    max-height: calc(100vh - 180px);
+    margin-bottom: 8px;
+  }
+
+  .cat-header {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.7rem, 1.5vw, 1.1rem);
+    color: var(--accent);
+    text-align: center;
+    padding: 12px 6px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+  }
+
+  .tile {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.2rem, 3vw, 2.4rem);
+    color: var(--warn);
+    cursor: pointer;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.15s;
+    user-select: none;
+    text-shadow: 0 0 12px rgba(255,184,0,0.3);
+    min-height: 60px;
+  }
+
+  .tile:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: scale(1.03);
+  }
+
+  .tile:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .tile.used {
+    opacity: 0.18;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .tile.used:hover {
+    border-color: var(--border);
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* Scoreboard */
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 6px 14px;
+  }
+
+  .team-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1.4vw, 1rem);
+    color: var(--text);
+    background: none;
+    border: none;
+    border-bottom: 1px dashed var(--muted);
+    padding: 2px 4px;
+    width: 90px;
+    text-align: center;
+    cursor: text;
+  }
+
+  .team-name:focus {
+    outline: none;
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .team-score {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    color: var(--warn);
+    min-width: 50px;
+    text-align: center;
+  }
+
+  .score-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .score-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .score-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .add-team-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: none;
+    border: 1px dashed var(--muted);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .add-team-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Question / Answer overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .overlay.hidden { display: none; }
+
+  .overlay-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    color: var(--muted);
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .overlay-question {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 3.4rem);
+    color: var(--text);
+    max-width: 900px;
+    line-height: 1.3;
+    margin-bottom: 40px;
+  }
+
+  .overlay-answer {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+    color: var(--good);
+    max-width: 900px;
+    line-height: 1.3;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px rgba(0,230,118,0.3);
+  }
+
+  .overlay-btn {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    padding: 14px 40px;
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .overlay-btn:hover {
+    background: rgba(0,229,255,0.18);
+    box-shadow: var(--glow);
+    transform: scale(1.04);
+  }
+
+  .overlay-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  /* Game over overlay */
+  .gameover-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,229,255,0.4);
+    margin-bottom: 40px;
+  }
+
+  .final-scores {
+    list-style: none;
+    margin-bottom: 40px;
+  }
+
+  .final-scores li {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    color: var(--text);
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .final-scores li:first-child {
+    color: var(--warn);
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
+  }
+
+  .final-scores .rank {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8em;
+    color: var(--muted);
+  }
+
+  .final-scores .pts {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+  }
+
+  /* Responsive stacking for small screens */
+  @media (max-width: 600px) {
+    .board {
+      gap: 4px;
+      max-height: none;
+    }
+    .cat-header {
+      font-size: 0.55rem;
+      padding: 8px 3px;
+    }
+    .tile {
+      min-height: 44px;
+      font-size: 1rem;
+    }
+    .scoreboard { gap: 8px; }
+    .team { padding: 4px 8px; gap: 4px; }
+    .team-name { width: 70px; font-size: 0.7rem; }
+    .score-btn { width: 26px; height: 26px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="game-wrap" id="app">
+  <!-- Board view -->
+  <div id="boardView">
+    <a href="/" class="back-link">&larr; Back to Hub</a>
+    <h1 class="board-title">EXPLOIT JEOPARDY</h1>
+    <div class="board" id="board"></div>
+    <div class="scoreboard" id="scoreboard"></div>
+  </div>
+
+  <!-- Question/Answer overlay -->
+  <div class="overlay hidden" id="overlay"></div>
+
+  <!-- Game Over overlay -->
+  <div class="overlay hidden" id="gameoverOverlay"></div>
+</div>
+
+<script>
+/* ============================================================
+   CATEGORIES — Edit this array to change all game content.
+   5 categories × 5 questions each = 25 tiles.
+   ============================================================ */
+const CATEGORIES = [
+  {
+    name: "Password Sins",
+    questions: [
+      { value: 200, question: "What common password practice involves using the same password for every account?", answer: "Password reuse" },
+      { value: 400, question: "What is the name for a password that appears in publicly leaked credential databases?", answer: "A compromised / breached password" },
+      { value: 600, question: "What type of attack systematically tries every possible character combination to crack a password?", answer: "Brute-force attack" },
+      { value: 800, question: "What security tool generates and stores unique complex passwords for each of your accounts?", answer: "A password manager" },
+      { value: 1000, question: "What NIST-recommended approach uses multiple random words strung together as a password?", answer: "A passphrase" },
+    ]
+  },
+  {
+    name: "Phish or Legit",
+    questions: [
+      { value: 200, question: "True or false: A padlock icon in the browser bar guarantees the website is safe.", answer: "False — it only means the connection is encrypted, not that the site is trustworthy" },
+      { value: 400, question: "What is the term for a phishing attack that targets a specific individual using personal details?", answer: "Spear phishing" },
+      { value: 600, question: "What should you check in a suspicious email URL before clicking it?", answer: "The actual domain name (hover to preview the real destination)" },
+      { value: 800, question: "What phishing technique uses SMS text messages instead of email?", answer: "Smishing (SMS phishing)" },
+      { value: 1000, question: "What type of phishing attack targets senior executives or high-profile individuals within an organization?", answer: "Whaling" },
+    ]
+  },
+  {
+    name: "Lock It Down",
+    questions: [
+      { value: 200, question: "What is the minimum recommended screen lock timeout for a company-issued mobile device?", answer: "2 minutes or less (varies by policy, but shorter is better)" },
+      { value: 400, question: "What technology encrypts your entire hard drive so stolen laptops can't be read?", answer: "Full-disk encryption (e.g., BitLocker, FileVault)" },
+      { value: 600, question: "What network tool encrypts all your internet traffic when using public Wi-Fi?", answer: "A VPN (Virtual Private Network)" },
+      { value: 800, question: "What security feature ensures your OS and apps automatically receive the latest patches?", answer: "Automatic updates / auto-update" },
+      { value: 1000, question: "What mobile security practice prevents unauthorized apps from bypassing OS protections?", answer: "Not jailbreaking/rooting your device" },
+    ]
+  },
+  {
+    name: "Breach Aftermath",
+    questions: [
+      { value: 200, question: "What is the very first thing you should do when you learn your password was in a data breach?", answer: "Change the compromised password immediately" },
+      { value: 400, question: "What free service lets you check if your email has appeared in known data breaches?", answer: "Have I Been Pwned (haveibeenpwned.com)" },
+      { value: 600, question: "After a breach, what should you place on your credit file to prevent new accounts being opened in your name?", answer: "A credit freeze (or fraud alert)" },
+      { value: 800, question: "What law requires organizations to notify affected individuals within 72 hours of discovering a breach in the EU?", answer: "GDPR (General Data Protection Regulation)" },
+      { value: 1000, question: "What type of attack uses credentials stolen from one breach to try logging into other services?", answer: "Credential stuffing" },
+    ]
+  },
+  {
+    name: "Social Engineering",
+    questions: [
+      { value: 200, question: "What social engineering technique involves following an authorized person through a secure door?", answer: "Tailgating (or piggybacking)" },
+      { value: 400, question: "What is it called when an attacker creates a fabricated scenario to trick someone into giving up information?", answer: "Pretexting" },
+      { value: 600, question: "What physical social engineering tactic involves searching through discarded documents for sensitive information?", answer: "Dumpster diving" },
+      { value: 800, question: "What term describes leaving infected USB drives in public places hoping someone plugs them in?", answer: "USB baiting (or USB drop attack)" },
+      { value: 1000, question: "What psychological principle do attackers exploit when they impersonate an IT admin and demand your credentials?", answer: "Authority bias (obedience to authority)" },
+    ]
+  },
+];
+
+/* ============================================================
+   Game state
+   ============================================================ */
+let teams = [
+  { name: "Team 1", score: 0 },
+  { name: "Team 2", score: 0 },
+];
+let usedTiles = new Set();          // "col-row" keys
+let currentValue = 0;               // point value of active question
+const totalTiles = CATEGORIES.length * CATEGORIES[0].questions.length;
+
+/* ============================================================
+   Render: Board
+   ============================================================ */
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  // Category headers
+  CATEGORIES.forEach(cat => {
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.textContent = cat.name;
+    board.appendChild(header);
+  });
+
+  // Question tiles — row by row
+  const rowCount = CATEGORIES[0].questions.length;
+  for (let r = 0; r < rowCount; r++) {
+    CATEGORIES.forEach((cat, c) => {
+      const q = cat.questions[r];
+      const tile = document.createElement('button');
+      const key = c + '-' + r;
+      tile.className = 'tile' + (usedTiles.has(key) ? ' used' : '');
+      tile.textContent = q.value;
+      tile.setAttribute('aria-label', cat.name + ' for ' + q.value);
+      tile.addEventListener('click', () => showQuestion(c, r));
+      board.appendChild(tile);
+    });
+  }
+}
+
+/* ============================================================
+   Render: Scoreboard
+   ============================================================ */
+function renderScoreboard() {
+  const sb = document.getElementById('scoreboard');
+  sb.innerHTML = '';
+
+  teams.forEach((team, i) => {
+    const div = document.createElement('div');
+    div.className = 'team';
+
+    const nameInput = document.createElement('input');
+    nameInput.className = 'team-name';
+    nameInput.type = 'text';
+    nameInput.value = team.name;
+    nameInput.maxLength = 16;
+    nameInput.setAttribute('aria-label', 'Team name');
+    nameInput.addEventListener('change', () => { team.name = nameInput.value || ('Team ' + (i + 1)); });
+
+    const minus = document.createElement('button');
+    minus.className = 'score-btn';
+    minus.textContent = '−';
+    minus.setAttribute('aria-label', 'Subtract points');
+    minus.addEventListener('click', () => { team.score -= currentValue || 200; renderScoreboard(); });
+
+    const scoreSpan = document.createElement('span');
+    scoreSpan.className = 'team-score';
+    scoreSpan.textContent = team.score;
+
+    const plus = document.createElement('button');
+    plus.className = 'score-btn';
+    plus.textContent = '+';
+    plus.setAttribute('aria-label', 'Add points');
+    plus.addEventListener('click', () => { team.score += currentValue || 200; renderScoreboard(); });
+
+    div.append(minus, nameInput, scoreSpan, plus);
+    sb.appendChild(div);
+  });
+
+  if (teams.length < 4) {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-team-btn';
+    addBtn.textContent = '+ Add Team';
+    addBtn.addEventListener('click', () => {
+      teams.push({ name: 'Team ' + (teams.length + 1), score: 0 });
+      renderScoreboard();
+    });
+    sb.appendChild(addBtn);
+  }
+}
+
+/* ============================================================
+   Show Question
+   ============================================================ */
+function showQuestion(col, row) {
+  const key = col + '-' + row;
+  if (usedTiles.has(key)) return;
+
+  const cat = CATEGORIES[col];
+  const q = cat.questions[row];
+  currentValue = q.value;
+
+  const overlay = document.getElementById('overlay');
+  overlay.className = 'overlay';
+  overlay.innerHTML =
+    '<div class="overlay-meta">' + escHtml(cat.name) + ' — ' + q.value + '</div>' +
+    '<div class="overlay-question">' + escHtml(q.question) + '</div>' +
+    '<button class="overlay-btn" id="revealBtn">Reveal Answer</button>';
+
+  document.getElementById('revealBtn').addEventListener('click', () => showAnswer(col, row));
+}
+
+/* ============================================================
+   Show Answer
+   ============================================================ */
+function showAnswer(col, row) {
+  const key = col + '-' + row;
+  usedTiles.add(key);
+
+  const cat = CATEGORIES[col];
+  const q = cat.questions[row];
+
+  const overlay = document.getElementById('overlay');
+  overlay.innerHTML =
+    '<div class="overlay-meta">' + escHtml(cat.name) + ' — ' + q.value + '</div>' +
+    '<div class="overlay-question">' + escHtml(q.question) + '</div>' +
+    '<div class="overlay-answer">' + escHtml(q.answer) + '</div>' +
+    '<button class="overlay-btn" id="backBtn">Back to Board</button>';
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    overlay.className = 'overlay hidden';
+    renderBoard();
+    renderScoreboard();
+    if (usedTiles.size >= totalTiles) showGameOver();
+  });
+}
+
+/* ============================================================
+   Game Over
+   ============================================================ */
+function showGameOver() {
+  const sorted = [...teams].sort((a, b) => b.score - a.score);
+  const overlay = document.getElementById('gameoverOverlay');
+  overlay.className = 'overlay';
+
+  let listHtml = '';
+  sorted.forEach((t, i) => {
+    listHtml += '<li><span class="rank">#' + (i + 1) + '</span> ' +
+      escHtml(t.name) + ' <span class="pts">' + t.score + '</span></li>';
+  });
+
+  overlay.innerHTML =
+    '<div class="gameover-title">GAME OVER</div>' +
+    '<ul class="final-scores">' + listHtml + '</ul>' +
+    '<button class="overlay-btn" id="replayBtn">Play Again</button>';
+
+  document.getElementById('replayBtn').addEventListener('click', resetGame);
+}
+
+/* ============================================================
+   Reset
+   ============================================================ */
+function resetGame() {
+  usedTiles.clear();
+  currentValue = 0;
+  teams.forEach(t => { t.score = 0; });
+  document.getElementById('gameoverOverlay').className = 'overlay hidden';
+  document.getElementById('overlay').className = 'overlay hidden';
+  renderBoard();
+  renderScoreboard();
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+function escHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+/* ============================================================
+   Init
+   ============================================================ */
+renderBoard();
+renderScoreboard();
+</script>
+</body>
+</html>
