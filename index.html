@@ -233,6 +233,36 @@
   .diff-medium { background: rgba(255,184,0,0.15); color: var(--warn); border: 1px solid rgba(255,184,0,0.3); }
   .diff-hard { background: rgba(255,59,92,0.15); color: var(--danger); border: 1px solid rgba(255,59,92,0.3); }
 
+  .completion-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(0,229,255,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .proctored-toggle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+
+  .proctored-toggle:hover { color: var(--accent); }
+
+  .proctored-toggle.active { color: var(--accent); }
+
   /* ---- GAME SCREEN ---- */
   .scene-header {
     display: flex;
@@ -978,6 +1008,7 @@
     </div>
 
     <p style="font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--muted); margin-top:32px; letter-spacing:0.05em;">Last updated: April 2026</p>
+    <button class="proctored-toggle" id="proctoredToggle" onclick="toggleProctoredMode()">Enable Proctored Mode</button>
   </div>
 
   <!-- ========== GAME SCREEN ========== -->
@@ -997,7 +1028,7 @@
     <div class="feedback-banner" id="feedbackBanner"></div>
 
     <div class="action-row">
-      <button class="btn btn-ghost" onclick="goHome()">← Back</button>
+      <button class="btn btn-ghost" id="backBtn" onclick="goHome()">← Back</button>
       <button class="btn btn-primary" id="mainActionBtn" onclick="handleMainAction()">Check →</button>
     </div>
   </div>
@@ -1022,8 +1053,16 @@
       <div class="learnings" id="learningsBox"></div>
 
       <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-        <button class="btn btn-ghost" onclick="goHome()">← All Scenarios</button>
+        <button class="btn btn-ghost" id="scoreHomeBtn" onclick="goHome()">← All Scenarios</button>
         <button class="btn btn-primary" id="retryBtn" onclick="retryScenario()">↺ Try Again</button>
+        <button class="btn btn-ghost" id="resetBtn" onclick="handleReset()">Play Again</button>
+      </div>
+      <div id="resetConfirm" style="display:none;margin-top:16px;text-align:center;">
+        <p style="font-size:0.82rem;color:var(--warn);margin-bottom:10px;">Clear all progress and reset for the next student?</p>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button class="btn btn-ghost" onclick="cancelReset()" style="font-size:0.8rem;">Cancel</button>
+          <button class="btn btn-primary" onclick="confirmReset()" style="font-size:0.8rem;background:var(--danger);">Yes, Reset</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1041,6 +1080,8 @@ let health = 100;
 let currentStep = 0;
 let stepData = {};
 let lastScenario = null;
+let completedScenarios = {};  // { scenarioKey: bestPct }
+let proctoredMode = false;
 
 // ============================================================
 //  SCENARIO DEFINITIONS
@@ -1140,11 +1181,60 @@ function goHome() {
   btn.disabled = false;
   document.getElementById('interactionContainer').innerHTML = '';
   hideFeedback();
+  updateSplashCards();
   showScreen('splashScreen');
 }
 
 function retryScenario() {
   if (lastScenario) startScenario(lastScenario);
+}
+
+function markCompleted(scenarioKey, pct) {
+  if (!completedScenarios[scenarioKey] || pct > completedScenarios[scenarioKey]) {
+    completedScenarios[scenarioKey] = pct;
+  }
+}
+
+function updateSplashCards() {
+  const keys = ['password','mfa','phishing','permissions','breach'];
+  keys.forEach(key => {
+    const card = document.querySelector(`.scenario-card[onclick="startScenario('${key}')"]`);
+    if (!card) return;
+    const existing = card.querySelector('.completion-badge');
+    if (existing) existing.remove();
+    if (completedScenarios[key] !== undefined) {
+      const badge = document.createElement('div');
+      badge.className = 'completion-badge';
+      badge.textContent = '✓ ' + completedScenarios[key] + '%';
+      card.appendChild(badge);
+    }
+  });
+}
+
+function toggleProctoredMode() {
+  proctoredMode = !proctoredMode;
+  const toggle = document.getElementById('proctoredToggle');
+  toggle.textContent = proctoredMode ? 'Disable Proctored Mode' : 'Enable Proctored Mode';
+  toggle.className = 'proctored-toggle' + (proctoredMode ? ' active' : '');
+}
+
+function handleReset() {
+  if (proctoredMode) {
+    document.getElementById('resetConfirm').style.display = 'block';
+  } else {
+    completedScenarios = {};
+    goHome();
+  }
+}
+
+function cancelReset() {
+  document.getElementById('resetConfirm').style.display = 'none';
+}
+
+function confirmReset() {
+  document.getElementById('resetConfirm').style.display = 'none';
+  completedScenarios = {};
+  goHome();
 }
 
 function updateHealth(delta) {
@@ -1183,6 +1273,9 @@ function startScenario(id) {
 
   buildStepDots(s.steps);
   hideFeedback();
+
+  // Hide back button in proctored mode
+  document.getElementById('backBtn').style.display = proctoredMode ? 'none' : '';
 
   showScreen('gameScreen');
   renderStep();
@@ -2091,6 +2184,16 @@ function showScore() {
     <h3>// KEY TAKEAWAYS</h3>
     ${s.learnings.map(l => `<div class="learning-item">${l}</div>`).join('')}
   `;
+
+  // Track completion
+  markCompleted(currentScenario, pct);
+
+  // Update buttons for proctored mode
+  const resetBtn = document.getElementById('resetBtn');
+  const scoreHomeBtn = document.getElementById('scoreHomeBtn');
+  resetBtn.textContent = proctoredMode ? 'Reset for Next Student' : 'Play Again';
+  scoreHomeBtn.style.display = proctoredMode ? 'none' : '';
+  document.getElementById('resetConfirm').style.display = 'none';
 
   showScreen('scoreScreen');
 
