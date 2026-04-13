@@ -435,7 +435,7 @@
 
   .email-header span { color: var(--text); }
 
-  .red-flag {
+  .email-card span {
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
@@ -443,7 +443,13 @@
     padding: 0 2px;
   }
 
-  .red-flag:hover { background: rgba(255,59,92,0.15); }
+  .email-card span:hover { background: rgba(0,229,255,0.08); }
+
+  .red-flag {
+    position: relative;
+    border-radius: 4px;
+    padding: 0 2px;
+  }
 
   .red-flag.flagged {
     background: rgba(255,59,92,0.2);
@@ -1341,19 +1347,19 @@ function renderPhishingStep(c, btn) {
         <div class="email-card">
           <div class="email-header">
             From: <span id="pf1" class="red-flag" onclick="flagElement('pf1')">security@paypa1.support</span><br>
-            To: you@email.com<br>
+            To: <span class="decoy" onclick="flagElement(null)">you@email.com</span><br>
             Subject: <span id="pf2" class="red-flag" onclick="flagElement('pf2')">URGENT: Your account will be suspended</span>
           </div>
           <div>
-            Dear Customer,<br><br>
-            We have detected unusual activity on your PayPal account. Your account will be suspended
+            <span class="decoy" onclick="flagElement(null)">Dear Customer,</span><br><br>
+            <span class="decoy" onclick="flagElement(null)">We have detected unusual activity on your PayPal account.</span> <span class="decoy" onclick="flagElement(null)">Your account will be suspended</span>
             <span id="pf3" class="red-flag" onclick="flagElement('pf3')">within 24 hours</span>
-            unless you verify your identity immediately.<br><br>
+            <span class="decoy" onclick="flagElement(null)">unless you verify your identity immediately.</span><br><br>
             <span id="pf4" class="red-flag" onclick="flagElement('pf4')">Click here to verify</span>
-            your account now:<br>
+            <span class="decoy" onclick="flagElement(null)">your account now:</span><br>
             <span id="pf5" class="red-flag" onclick="flagElement('pf5')">http://paypal-verify.click/secure</span><br><br>
-            Regards,<br>
-            The PayPal Security Team
+            <span class="decoy" onclick="flagElement(null)">Regards,</span><br>
+            <span class="decoy" onclick="flagElement(null)">The PayPal Security Team</span>
           </div>
         </div>
         <div class="flag-count">Red flags found: <span id="flagCount">0</span> / 5</div>
@@ -1383,6 +1389,7 @@ function renderPhishingStep(c, btn) {
 }
 
 function flagElement(id) {
+  if (!id) { showToast('Not a red flag — keep looking!', 'warn'); return; }
   const el = document.getElementById(id);
   if (!el || el.classList.contains('flagged')) return;
   el.classList.add('flagged');
