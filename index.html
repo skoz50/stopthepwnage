@@ -540,7 +540,6 @@
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 0.88rem;
-    cursor: pointer;
     transition: all 0.2s;
     user-select: none;
   }
@@ -569,6 +568,26 @@
   .tag-sensitive { background: rgba(255,59,92,0.2); color: var(--danger); }
   .tag-safe { background: rgba(0,230,118,0.2); color: var(--good); }
   .tag-unknown { background: rgba(100,116,139,0.2); color: var(--muted); }
+
+  .breach-btns { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .classify-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .classify-btn:hover { border-color: var(--accent); color: var(--text); }
+  .classify-btn.active-sensitive { background: rgba(255,59,92,0.2); color: var(--danger); border-color: var(--danger); }
+  .classify-btn.active-safe { background: rgba(0,230,118,0.2); color: var(--good); border-color: var(--good); }
 
   /* Buttons */
   .btn {
@@ -1488,9 +1507,12 @@ function renderBreachStep(c, btn) {
         <div class="zone-label">Tap each item — is it Sensitive data or Not Sensitive?</div>
         <div class="breach-items" id="breachList">
           ${BREACH_DATA.map((item, i) => `
-            <div class="breach-item" id="bi-${i}" onclick="toggleBreach(${i})">
+            <div class="breach-item" id="bi-${i}">
               <span>${item.icon} ${item.label}</span>
-              <span class="sensitivity-tag tag-unknown" id="btag-${i}">Tap to classify</span>
+              <span class="breach-btns" id="btag-${i}">
+                <button class="classify-btn" onclick="classifyBreach(${i},'sensitive')">Sensitive</button>
+                <button class="classify-btn" onclick="classifyBreach(${i},'not-sensitive')">Safe</button>
+              </span>
             </div>
           `).join('')}
         </div>
@@ -1517,22 +1539,13 @@ function renderBreachStep(c, btn) {
   }
 }
 
-function toggleBreach(i) {
-  const current = stepData.breachChoices[i];
-  // cycle: undefined → sensitive → not-sensitive → undefined
-  let next;
-  if (current === undefined) next = 'sensitive';
-  else if (current === 'sensitive') next = 'not-sensitive';
-  else next = undefined;
-
-  stepData.breachChoices[i] = next;
+function classifyBreach(i, choice) {
+  stepData.breachChoices[i] = choice;
   const el = document.getElementById('bi-' + i);
-  const tag = document.getElementById('btag-' + i);
-
-  el.className = 'breach-item' + (next === 'sensitive' ? ' sensitive' : next === 'not-sensitive' ? ' not-sensitive' : '');
-  if (!next) { tag.className = 'sensitivity-tag tag-unknown'; tag.textContent = 'Tap to classify'; }
-  else if (next === 'sensitive') { tag.className = 'sensitivity-tag tag-sensitive'; tag.textContent = '⚠ Sensitive'; }
-  else { tag.className = 'sensitivity-tag tag-safe'; tag.textContent = '✓ Safe'; }
+  const btns = el.querySelectorAll('.classify-btn');
+  el.className = 'breach-item' + (choice === 'sensitive' ? ' sensitive' : ' not-sensitive');
+  btns[0].className = 'classify-btn' + (choice === 'sensitive' ? ' active-sensitive' : '');
+  btns[1].className = 'classify-btn' + (choice === 'not-sensitive' ? ' active-safe' : '');
 }
 
 // ============================================================
@@ -1760,24 +1773,31 @@ function handlePermissionsAction(isLast) {
 function handleBreachAction(isLast) {
   if (currentStep === 0) {
     const choices = stepData.breachChoices;
+    const classified = Object.keys(choices).length;
+    if (classified < BREACH_DATA.length) {
+      showFeedback('info', `Classify all ${BREACH_DATA.length} items before submitting. You've done ${classified} so far.`);
+      return;
+    }
     let correct = 0;
     BREACH_DATA.forEach((item, i) => {
-      const classified = choices[i];
-      const isCorrect = (classified === 'sensitive') === item.sensitive;
+      const choice = choices[i];
+      const isCorrect = (choice === 'sensitive') === item.sensitive;
       if (isCorrect) correct++;
-      // Update UI
+      // Update UI — replace buttons with result tag
       const el = document.getElementById('bi-' + i);
-      const tag = document.getElementById('btag-' + i);
-      if (el && tag) {
+      const btnArea = document.getElementById('btag-' + i);
+      if (el && btnArea) {
+        const resultTag = document.createElement('span');
         if (isCorrect) {
           el.className = 'breach-item not-sensitive';
-          tag.className = 'sensitivity-tag tag-safe';
-          tag.textContent = '✓ Correct';
+          resultTag.className = 'sensitivity-tag tag-safe';
+          resultTag.textContent = '✓ Correct';
         } else {
           el.className = 'breach-item sensitive';
-          tag.className = 'sensitivity-tag tag-sensitive';
-          tag.textContent = item.sensitive ? '✗ Is Sensitive!' : '✗ Not Sensitive';
+          resultTag.className = 'sensitivity-tag tag-sensitive';
+          resultTag.textContent = item.sensitive ? '✗ Is Sensitive!' : '✗ Not Sensitive';
         }
+        btnArea.replaceWith(resultTag);
       }
     });
 
