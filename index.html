@@ -1565,6 +1565,7 @@ const MFA_OPTIONS = [
 function renderMFAStep(c, btn) {
   if (currentStep === 0) {
     stepData.mfaSelected = null;
+    stepData.mfaLocked = false;
     c.innerHTML = `
       <div class="interaction-zone">
         <div class="zone-label">Which method gives you the best protection for everyday use?</div>
@@ -1607,6 +1608,7 @@ function renderMFAStep(c, btn) {
 }
 
 function selectMFA(i) {
+  if (stepData.mfaLocked) return;
   stepData.mfaSelected = i;
   MFA_OPTIONS.forEach((_, j) => {
     const el = document.getElementById('mfa-opt-' + j);
@@ -1813,6 +1815,10 @@ function handleMFAAction(isLast) {
     gameScore.total += pts;
     gameScore.max += 30;
     gameScore.details.push({ label: 'MFA Choice', score: pts, max: 30 });
+
+    // Lock selections so user can't change after submitting
+    stepData.mfaLocked = true;
+    document.querySelectorAll('.mfa-option').forEach(el => el.style.pointerEvents = 'none');
 
     if (chosen.correct) {
       showFeedback('good', `<b>Best choice for everyday use!</b> Authenticator apps are phishing-resistant, don't rely on your phone number, and work even without cell service. They're strongly recommended by security experts.`);
