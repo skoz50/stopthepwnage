@@ -1362,7 +1362,7 @@ function renderPhishingStep(c, btn) {
             <span class="decoy" onclick="flagElement(null)">The PayPal Security Team</span>
           </div>
         </div>
-        <div class="flag-count">Red flags found: <span id="flagCount">0</span> / 5</div>
+        <div class="flag-count">Red flags found: <span id="flagCount">0</span><span id="flagTotal"></span></div>
       </div>
     `;
     btn.textContent = 'Submit Findings →';
@@ -1674,6 +1674,9 @@ function handlePasswordAction(isLast) {
 function handlePhishingAction(isLast) {
   if (currentStep === 0) {
     const found = stepData.flagsFound?.size || 0;
+    // Reveal total count after submission
+    const flagTotal = document.getElementById('flagTotal');
+    if (flagTotal) flagTotal.textContent = ' / 5';
     // Show missed flags
     PHISHING_FLAGS.forEach(f => {
       if (!stepData.flagsFound?.has(f.id)) {
