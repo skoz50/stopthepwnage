@@ -126,28 +126,6 @@
 
   .logo span { color: var(--text); }
 
-  .health-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-  }
-
-  .health-track {
-    width: 120px;
-    height: 8px;
-    background: var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .health-fill {
-    height: 100%;
-    background: var(--good);
-    border-radius: 4px;
-    transition: width 0.5s ease, background 0.3s;
-  }
 
   /* ---- SPLASH ---- */
   .splash-hero {
@@ -928,13 +906,6 @@
   <!-- GLOBAL HEADER (hidden on splash) -->
   <header class="site-header" id="gameHeader" style="display:none">
     <div class="logo">DATA<span>GUARD</span></div>
-    <div class="health-bar">
-      <span style="color:var(--muted)">SECURITY SCORE</span>
-      <div class="health-track">
-        <div class="health-fill" id="healthFill" style="width:100%"></div>
-      </div>
-      <span id="healthVal" style="color:var(--accent)">100</span>
-    </div>
   </header>
 
   <!-- ========== SPLASH SCREEN ========== -->
@@ -1158,10 +1129,6 @@ function retryScenario() {
 
 function updateHealth(delta) {
   health = Math.max(0, Math.min(100, health + delta));
-  document.getElementById('healthFill').style.width = health + '%';
-  document.getElementById('healthFill').style.background =
-    health > 60 ? 'var(--good)' : health > 30 ? 'var(--warn)' : 'var(--danger)';
-  document.getElementById('healthVal').textContent = health;
 }
 
 function showToast(msg, type = 'good') {
