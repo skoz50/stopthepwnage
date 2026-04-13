@@ -71,6 +71,17 @@
   .logo span { color: var(--text); }
 
 
+  /* ---- BACK LINK ---- */
+  .back-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
   /* ---- SPLASH ---- */
   .splash-hero {
     text-align: center;
@@ -904,6 +915,7 @@
 
   <!-- ========== SPLASH SCREEN ========== -->
   <div id="splashScreen" class="screen active">
+    <a href="/" class="back-link">&larr; Back to Hub</a>
     <div class="splash-hero">
       <span class="splash-icon">🛡️</span>
       <h1 class="splash-title">
