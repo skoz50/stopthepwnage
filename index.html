@@ -1236,33 +1236,78 @@ const pwdSteps = [
 
 function renderPasswordStep(c, btn) {
   const stepInfo = pwdSteps[currentStep] || pwdSteps[0];
-  c.innerHTML = `
-    <div class="interaction-zone">
-      <div class="zone-label">Step ${currentStep + 1} — ${stepInfo.task}</div>
-      <div class="password-input-wrap">
-        <input class="cyber-input" type="text" id="pwdInput" placeholder="Type your password here..."
-          oninput="evaluatePassword(this.value)" autocomplete="off" spellcheck="false">
-      </div>
-      <div class="strength-meter">
-        <div class="strength-bars">
-          <div class="s-bar" id="sb0"></div>
-          <div class="s-bar" id="sb1"></div>
-          <div class="s-bar" id="sb2"></div>
-          <div class="s-bar" id="sb3"></div>
-          <div class="s-bar" id="sb4"></div>
+  const isPassphrase = currentStep === 2;
+  const isBreachStep = currentStep === 1;
+
+  let breachNotice = '';
+  if (isBreachStep && stepData.prevPassword) {
+    breachNotice = `<div style="background:rgba(255,59,92,0.1);border:1px solid rgba(255,59,92,0.3);border-radius:8px;padding:12px;margin-bottom:14px;font-size:0.82rem;color:#ffb0bc;">
+      <b>Breached password:</b> <code style="color:var(--danger);background:rgba(255,59,92,0.15);padding:2px 6px;border-radius:3px;">${stepData.prevPassword}</code><br>
+      Your new password must be significantly different from this one.
+    </div>`;
+  }
+
+  if (isPassphrase) {
+    c.innerHTML = `
+      <div class="interaction-zone">
+        <div class="zone-label">Step ${currentStep + 1} — ${stepInfo.task}</div>
+        <div class="password-input-wrap">
+          <input class="cyber-input" type="text" id="pwdInput" placeholder="e.g. correct-horse-battery-staple"
+            oninput="evaluatePassphrase(this.value)" autocomplete="off" spellcheck="false">
         </div>
-        <span class="strength-label" id="strengthLabel" style="color:var(--muted)">Start typing to see strength...</span>
+        <div class="strength-meter">
+          <div class="strength-bars">
+            <div class="s-bar" id="sb0"></div>
+            <div class="s-bar" id="sb1"></div>
+            <div class="s-bar" id="sb2"></div>
+            <div class="s-bar" id="sb3"></div>
+            <div class="s-bar" id="sb4"></div>
+          </div>
+          <span class="strength-label" id="strengthLabel" style="color:var(--muted)">Start typing your passphrase...</span>
+        </div>
+        <div class="strength-tips" id="strengthTips">
+          <span class="tip-chip unmet" id="tc-words">4+ words</span>
+          <span class="tip-chip unmet" id="tc-sep">Separators</span>
+          <span class="tip-chip unmet" id="tc-plen">16+ chars</span>
+          <span class="tip-chip unmet" id="tc-nodict">Not a sentence</span>
+        </div>
       </div>
-      <div class="strength-tips" id="strengthTips">
-        <span class="tip-chip unmet" id="tc-len">12+ chars</span>
-        <span class="tip-chip unmet" id="tc-upper">Uppercase</span>
-        <span class="tip-chip unmet" id="tc-lower">Lowercase</span>
-        <span class="tip-chip unmet" id="tc-num">Number</span>
-        <span class="tip-chip unmet" id="tc-sym">Symbol</span>
-        <span class="tip-chip unmet" id="tc-nocommon">Not common</span>
+    `;
+  } else {
+    c.innerHTML = `
+      <div class="interaction-zone">
+        <div class="zone-label">Step ${currentStep + 1} — ${stepInfo.task}</div>
+        ${breachNotice}
+        <div class="password-input-wrap">
+          <input class="cyber-input" type="text" id="pwdInput" placeholder="Type your password here..."
+            oninput="evaluatePassword(this.value)" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="strength-meter">
+          <div class="strength-bars">
+            <div class="s-bar" id="sb0"></div>
+            <div class="s-bar" id="sb1"></div>
+            <div class="s-bar" id="sb2"></div>
+            <div class="s-bar" id="sb3"></div>
+            <div class="s-bar" id="sb4"></div>
+          </div>
+          <span class="strength-label" id="strengthLabel" style="color:var(--muted)">Start typing to see strength...</span>
+        </div>
+        <div class="strength-tips" id="strengthTips">
+          <span class="tip-chip unmet" id="tc-len">12+ chars</span>
+          <span class="tip-chip unmet" id="tc-upper">Uppercase</span>
+          <span class="tip-chip unmet" id="tc-lower">Lowercase</span>
+          <span class="tip-chip unmet" id="tc-num">Number</span>
+          <span class="tip-chip unmet" id="tc-sym">Symbol</span>
+          <span class="tip-chip unmet" id="tc-nocommon">Not common</span>
+        </div>
+        <div class="password-input-wrap" style="margin-top:12px;">
+          <input class="cyber-input" type="text" id="confirmInput" placeholder="Confirm your password..."
+            autocomplete="off" spellcheck="false">
+        </div>
+        <div id="confirmMsg" style="font-size:0.78rem;margin-top:4px;min-height:1.2em;"></div>
       </div>
-    </div>
-  `;
+    `;
+  }
   stepData.passwordScore = 0;
 }
 
@@ -1293,7 +1338,12 @@ function evaluatePassword(val) {
     { color: 'var(--good)', label: '🟢 Very Strong — excellent password!' }
   ];
 
-  const level = val.length === 0 ? -1 : Math.min(met, 5);
+  // Length gates the maximum possible score
+  let level;
+  if (val.length === 0) level = -1;
+  else if (val.length < 8) level = Math.min(met, 1);   // cap at Weak
+  else if (val.length < 12) level = Math.min(met, 2);  // cap at Fair
+  else level = Math.min(met, 5);
   const lbl = document.getElementById('strengthLabel');
 
   for (let i = 0; i < 5; i++) {
@@ -1307,6 +1357,62 @@ function evaluatePassword(val) {
     lbl.style.color = levels[level].color;
   } else {
     lbl.textContent = 'Start typing to see strength...';
+    lbl.style.color = 'var(--muted)';
+  }
+
+  stepData.passwordScore = level;
+  stepData.passwordMet = met;
+}
+
+const COMMON_WORDS = ['the','be','to','of','and','a','in','that','have','i','it','for','not','on','with','he','as','you','do','at','this','but','his','by','from','they','we','her','she','or','an','will','my','one','all','would','there','their','what','so','up','out','if','about','who','get','which','go','me','when','make','can','like','time','no','just','him','know','take','people','into','year','your','good','some','could','them','see','other','than','then','now','look','only','come','its','over','think','also','back','after','use','two','how','our','work','first','well','way','even','new','want','because','any','these','give','day','most','us','is','are','was','were','been','has','had','did','got','may','said','each','tell','does','set','three','own','hand','high','keep','last','long','old','still','find','here','thing','many','let','say','she','too','much'];
+
+function evaluatePassphrase(val) {
+  // Split on common separators: spaces, hyphens, underscores, dots, commas
+  const parts = val.split(/[\s\-_.,]+/).filter(p => p.length > 0);
+  const wordCount = parts.length;
+  const hasSeparators = /[\s\-_.,]/.test(val);
+  const totalLen = val.length;
+  // Check it's not just a normal sentence (most words are common short words)
+  const commonRatio = parts.filter(p => COMMON_WORDS.includes(p.toLowerCase())).length / Math.max(wordCount, 1);
+  const isSentence = wordCount >= 4 && commonRatio > 0.7;
+
+  const checks = {
+    words: wordCount >= 4,
+    sep: hasSeparators,
+    plen: totalLen >= 16,
+    nodict: !isSentence
+  };
+
+  const met = Object.values(checks).filter(Boolean).length;
+  ['words','sep','plen','nodict'].forEach(k => {
+    const el = document.getElementById('tc-' + k);
+    if (el) el.className = 'tip-chip ' + (checks[k] ? 'met' : 'unmet');
+  });
+
+  const levels = [
+    { color: 'var(--danger)', label: '🔴 Too short — add more words' },
+    { color: 'var(--danger)', label: '🟠 Weak — needs more random words' },
+    { color: 'var(--warn)', label: '🟡 Fair — try adding separators or another word' },
+    { color: 'var(--warn)', label: '🟡 Good — almost there' },
+    { color: 'var(--good)', label: '🟢 Strong passphrase — easy to remember, hard to crack!' }
+  ];
+
+  let level;
+  if (val.length === 0) level = -1;
+  else level = Math.min(met, 4);
+
+  const lbl = document.getElementById('strengthLabel');
+  for (let i = 0; i < 5; i++) {
+    const b = document.getElementById('sb' + i);
+    if (!b) continue;
+    b.style.background = (level >= 0 && i <= level - 1) ? levels[Math.max(0,level)].color : 'var(--border)';
+  }
+
+  if (level >= 0) {
+    lbl.textContent = levels[level].label;
+    lbl.style.color = levels[level].color;
+  } else {
+    lbl.textContent = 'Start typing your passphrase...';
     lbl.style.color = 'var(--muted)';
   }
 
@@ -1648,21 +1754,79 @@ function handleMainAction() {
   else if (currentScenario === 'mfa') handleMFAAction(isLastStep);
 }
 
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m + 1}, (_, i) => [i]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = Math.min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + (a[i-1] !== b[j-1] ? 1 : 0));
+  return dp[m][n];
+}
+
 function handlePasswordAction(isLast) {
   const val = document.getElementById('pwdInput')?.value || '';
   const score = stepData.passwordScore || 0;
   const met = stepData.passwordMet || 0;
+  const isPassphrase = currentStep === 2;
+  const isBreachStep = currentStep === 1;
 
-  if (!val) { showFeedback('info', 'Type a password first to check its strength!'); return; }
+  if (!val) { showFeedback('info', isPassphrase ? 'Type a passphrase first!' : 'Type a password first to check its strength!'); return; }
 
-  const pts = Math.max(0, score * 4);
-  const max = 20;
+  // Confirm password check (steps 0 and 1 only)
+  if (!isPassphrase) {
+    const confirm = document.getElementById('confirmInput')?.value || '';
+    if (confirm !== val) {
+      showFeedback('bad', '<b>Passwords don\'t match.</b> Your confirmation password must be exactly the same as the one above.');
+      return;
+    }
+  }
+
+  // Block reuse of breached password on step 2 (BUG-004)
+  if (isBreachStep && stepData.prevPassword) {
+    const prev = stepData.prevPassword.toLowerCase();
+    const curr = val.toLowerCase();
+    if (curr === prev) {
+      showFeedback('bad', '<b>That\'s the same breached password!</b> You must choose a completely different password after a breach.');
+      return;
+    }
+    if (levenshtein(curr, prev) <= 2) {
+      showFeedback('bad', '<b>Too similar to your breached password.</b> Changing just 1-2 characters isn\'t enough — attackers try common variations. Make it significantly different.');
+      return;
+    }
+  }
+
+  // Score based on step type
+  let pts, max;
+  if (isPassphrase) {
+    pts = Math.max(0, score * 5);
+    max = 20;
+  } else {
+    pts = Math.max(0, score * 4);
+    max = 20;
+  }
   gameScore.total += pts;
   gameScore.max += max;
-  gameScore.details.push({ label: `Password (Step ${currentStep + 1})`, score: pts, max });
 
-  if (score >= 4) {
-    showFeedback('good', `<b>Strong password!</b> You met ${met}/6 criteria. ${score === 5 ? 'Near perfect — that password would take centuries to crack.' : 'One more improvement could make it even stronger.'}`);
+  const stepLabel = isPassphrase ? 'Passphrase' : `Password (Step ${currentStep + 1})`;
+  gameScore.details.push({ label: stepLabel, score: pts, max });
+
+  // Store password for breach reuse check
+  stepData.prevPassword = val;
+
+  if (isPassphrase) {
+    if (score >= 3) {
+      showFeedback('good', `<b>Great passphrase!</b> You met ${met}/4 criteria. Multiple random words with separators are easy to remember and extremely hard to crack.`);
+      updateHealth(5);
+    } else if (score >= 2) {
+      showFeedback('warn', `<b>Decent, but could be stronger.</b> ${met}/4 criteria met. Try using more words, adding separators between them, or making sure they\'re not a common sentence.`);
+      updateHealth(-5);
+    } else {
+      showFeedback('bad', `<b>That's not quite a passphrase.</b> A passphrase should be 4+ random words joined by separators (like hyphens or spaces). Example: "correct-horse-battery-staple"`);
+      updateHealth(-15);
+    }
+  } else if (score >= 4) {
+    showFeedback('good', `<b>Strong password!</b> You met ${met}/6 criteria. ${met === 6 ? 'Excellent — long, complex, and not common. That\'s a top-tier password.' : 'One more improvement could make it even stronger.'}`);
     updateHealth(5);
   } else if (score >= 2) {
     showFeedback('bad', `<b>Too weak.</b> Only ${met}/6 criteria met. Add length, a mix of characters, and avoid common words. A weak password can be cracked in seconds by automated tools.`);
