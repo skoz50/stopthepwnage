@@ -866,11 +866,50 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 10px;
 }
 
-.event-stats {
-  color: var(--text-dark);
-  font-size: 0.95rem;
+.event-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
   margin-bottom: 16px;
-  line-height: 1.7;
+}
+
+.event-pill {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  font-size: clamp(0.78rem, 1.1vw, 0.85rem);
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.event-pill.activity {
+  background: rgba(45, 153, 214, 0.12);
+  color: var(--primary-dark);
+}
+
+.event-subrow { padding: 16px 0; }
+.event-subrow + .event-subrow { border-top: 1px solid var(--bg-light); }
+
+.event-subrow-date {
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-orange);
+  font-size: clamp(0.75rem, 1vw, 0.82rem);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.event-series-descriptor {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: clamp(0.85rem, 1.2vw, 0.92rem);
+  margin-top: 4px;
+  margin-bottom: 8px;
 }
 
 .event-images {
@@ -1390,7 +1429,16 @@ footer p a:hover { color: var(--accent-orange); }
         <div class="event-body">
           <h3>Empower Girls</h3>
           <div class="event-date">April 2024</div>
-          <div class="event-stats">250 girls | 12 Schools | 4 hrs | 3 zones: demo, interactive, inspo | 30+ Industry, Academia &amp; Government supporters</div>
+          <div class="event-pills">
+            <span class="event-pill">250 girls</span>
+            <span class="event-pill">12 schools</span>
+            <span class="event-pill">4 hours</span>
+            <span class="event-pill">3 zones</span>
+            <span class="event-pill">30+ supporters</span>
+            <span class="event-pill activity">Demo</span>
+            <span class="event-pill activity">Interactive</span>
+            <span class="event-pill activity">Inspo</span>
+          </div>
           <div class="event-images">
             <img src="https://placehold.co/300x200/2ABFA4/FFFFFF?text=Event+Photo+1" alt="Empower Girls event photo 1">
             <img src="https://placehold.co/300x200/1A6FB5/FFFFFF?text=Event+Photo+2" alt="Empower Girls event photo 2">
@@ -1406,7 +1454,13 @@ footer p a:hover { color: var(--accent-orange); }
         <div class="event-body">
           <h3>CSU GenCyber Camp</h3>
           <div class="event-date">May 2024</div>
-          <div class="event-stats">34 campers | 2 hrs | Among Us Cyber edition | What is cyber craft | Women in cyber panel</div>
+          <div class="event-pills">
+            <span class="event-pill">34 campers</span>
+            <span class="event-pill">2 hours</span>
+            <span class="event-pill activity">Among Us: Cyber Edition</span>
+            <span class="event-pill activity">What Is Cyber? Craft</span>
+            <span class="event-pill activity">Women in Cyber Panel</span>
+          </div>
           <div class="event-images">
             <img src="https://placehold.co/300x200/1A6FB5/FFFFFF?text=Camp+Photo+1" alt="GenCyber camp photo 1">
             <img src="https://placehold.co/300x200/2D99D6/FFFFFF?text=Camp+Photo+2" alt="GenCyber camp photo 2">
@@ -1421,7 +1475,14 @@ footer p a:hover { color: var(--accent-orange); }
         <div class="event-body">
           <h3>Girls Inc</h3>
           <div class="event-date">July 2024</div>
-          <div class="event-stats">23 girls | 2 sessions | 1.5 hrs | Among Us Cyber edition | What is cyber craft | Scam the scammer</div>
+          <div class="event-pills">
+            <span class="event-pill">23 girls</span>
+            <span class="event-pill">2 sessions</span>
+            <span class="event-pill">1.5 hours</span>
+            <span class="event-pill activity">Among Us: Cyber Edition</span>
+            <span class="event-pill activity">What Is Cyber? Craft</span>
+            <span class="event-pill activity">Scam the Scammer</span>
+          </div>
           <div class="event-images">
             <img src="https://placehold.co/300x200/F5982A/FFFFFF?text=Girls+Inc+Photo+1" alt="Girls Inc event photo 1">
             <img src="https://placehold.co/300x200/1A6FB5/FFFFFF?text=Girls+Inc+Photo+2" alt="Girls Inc event photo 2">
@@ -1434,9 +1495,29 @@ footer p a:hover { color: var(--accent-orange); }
       <div class="event-card">
         <div class="event-accent blue"></div>
         <div class="event-body">
-          <h3>Boys &amp; Girls Club</h3>
-          <div class="event-date">July 2024</div>
-          <div class="event-stats">42 Students | 4 sessions | 45 mins | Among Us Cyber edition | Tabletop Cyber Exercises &amp; Cyber Career Exposure</div>
+          <h3>Boys &amp; Girls Club Series</h3>
+          <p class="event-series-descriptor">A two-event partnership across one week &mdash; single workshop, then leadership summit follow-up.</p>
+
+          <div class="event-subrow">
+            <div class="event-subrow-date">July 10, 2024</div>
+            <div class="event-pills">
+              <span class="event-pill">20 students</span>
+              <span class="event-pill">2 sessions</span>
+              <span class="event-pill">45 minutes</span>
+              <span class="event-pill activity">Among Us: Cyber Edition</span>
+            </div>
+          </div>
+
+          <div class="event-subrow">
+            <div class="event-subrow-date">July 18, 2024</div>
+            <div class="event-pills">
+              <span class="event-pill">22 students</span>
+              <span class="event-pill">City-Wide Teen Leadership Summit</span>
+              <span class="event-pill activity">Tabletop Cyber Exercises</span>
+              <span class="event-pill activity">Cyber Career Exposure</span>
+            </div>
+          </div>
+
           <div class="event-images">
             <img src="https://placehold.co/300x200/0B3D6B/FFFFFF?text=BGC+Photo+1" alt="Boys and Girls Club photo 1">
             <img src="https://placehold.co/300x200/2D99D6/FFFFFF?text=BGC+Photo+2" alt="Boys and Girls Club photo 2">
