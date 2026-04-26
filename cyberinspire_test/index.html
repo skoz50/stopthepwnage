@@ -346,88 +346,6 @@ a { text-decoration: none; color: inherit; }
   .program-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Tracks ── */
-.tracks-wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-  position: relative;
-}
-
-.track-card {
-  background: var(--bg-white);
-  border-radius: 8px;
-  padding: 36px 28px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-  text-align: center;
-  position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.track-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-}
-
-.track-number {
-  width: 48px;
-  height: 48px;
-  background: var(--accent-orange);
-  color: var(--text-white);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-}
-
-.track-icon {
-  margin: 0 auto 16px;
-}
-
-.track-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 12px;
-  color: var(--primary);
-}
-
-.track-card.teal h3 { color: var(--accent-teal); }
-
-.track-card p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-.track-connector {
-  display: none;
-}
-
-@media (min-width: 769px) {
-  .track-connector {
-    display: block;
-    position: absolute;
-    top: 48px;
-    left: calc(33.33% + 16px);
-    right: calc(33.33% + 16px);
-    height: 0;
-    border-top: 2px dashed var(--primary-light);
-    z-index: 0;
-  }
-  .track-card { z-index: 1; }
-}
-
-@media (max-width: 992px) and (min-width: 769px) {
-  .tracks-wrapper { gap: 20px; }
-  .track-card { padding: 28px 20px; }
-}
-
-@media (max-width: 768px) {
-  .tracks-wrapper { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
-}
-
 /* ── Vision eyebrow (Program section) ── */
 .vision-eyebrow {
   font-family: 'Montserrat', sans-serif;
@@ -1289,7 +1207,7 @@ footer p a:hover { color: var(--accent-orange); }
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#program">Program</a></li>
-      <li><a href="#programs">Engage Kids</a></li>
+      <li><a href="#programs">Tracks</a></li>
       <li><a href="#activities">Activities</a></li>
       <li><a href="#events">Events</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -1303,7 +1221,7 @@ footer p a:hover { color: var(--accent-orange); }
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="closeMenu()">About</a>
   <a href="#program" onclick="closeMenu()">Program</a>
-  <a href="#programs" onclick="closeMenu()">Engage Kids</a>
+  <a href="#programs" onclick="closeMenu()">Tracks</a>
   <a href="#activities" onclick="closeMenu()">Activities</a>
   <a href="#events" onclick="closeMenu()">Events</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
@@ -1353,56 +1271,6 @@ footer p a:hover { color: var(--accent-orange); }
       <div class="vision-eyebrow">VISION</div>
       <span style="font-family: 'Montserrat', sans-serif; font-size: 3rem; color: var(--accent-orange); line-height: 1; display: block; margin-bottom: 8px;">&ldquo;</span>
       <p style="font-style: italic; font-size: 1.05rem; color: var(--text-dark); line-height: 1.8;">To cultivate a safer, more resilient community where every member is equipped with knowledge and understanding to help protect themselves and others against cyber threats; and where younger members are inspired to be the next generation of cyber defenders.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── Three Tracks ── -->
-<section class="section bg-white" id="tracks">
-  <div class="container section-center fade-in">
-    <h2 class="section-heading">Three Tracks</h2>
-    <p class="section-sub">Tailored experiences for every audience.</p>
-    <div class="tracks-wrapper">
-      <div class="track-connector"></div>
-
-      <div class="track-card">
-        <div class="track-number">1</div>
-        <div class="track-icon">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <path d="M24 4L8 12v10c0 11 6.7 21.3 16 24 9.3-2.7 16-13 16-24V12L24 4z" fill="#1A6FB5" opacity="0.15" stroke="#1A6FB5" stroke-width="2"/>
-            <path d="M24 14l-6 3.5v6c0 4.2 2.5 8 6 9 3.5-1 6-4.8 6-9v-6L24 14z" fill="#1A6FB5"/>
-          </svg>
-        </div>
-        <h3>Engage Kids</h3>
-        <p>Fast-paced, engaging activities focused on: Online safety, presence &amp; controls, Scam Awareness, Cybersecurity skills &amp; career options.</p>
-      </div>
-
-      <div class="track-card teal">
-        <div class="track-number">2</div>
-        <div class="track-icon">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <path d="M24 42s-14-8.4-14-19.8C10 14.5 16.3 8 24 8s14 6.5 14 14.2C38 33.6 24 42 24 42z" fill="#2ABFA4" opacity="0.15" stroke="#2ABFA4" stroke-width="2"/>
-            <path d="M24 34s-8-5-8-11.8c0-4.8 3.6-8.2 8-8.2s8 3.4 8 8.2C32 29 24 34 24 34z" fill="#2ABFA4"/>
-          </svg>
-        </div>
-        <h3>Empower Girls</h3>
-        <p>Customized offerings aiming to spark girls' interest in Cybersecurity to further efforts for increased women's representation in STEM.</p>
-      </div>
-
-      <div class="track-card">
-        <div class="track-number">3</div>
-        <div class="track-icon">
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <rect x="8" y="10" width="32" height="28" rx="3" fill="#1A6FB5" opacity="0.15" stroke="#1A6FB5" stroke-width="2"/>
-            <rect x="14" y="6" width="20" height="6" rx="2" fill="#1A6FB5"/>
-            <line x1="16" y1="22" x2="32" y2="22" stroke="#1A6FB5" stroke-width="2"/>
-            <line x1="16" y1="28" x2="28" y2="28" stroke="#1A6FB5" stroke-width="2"/>
-            <line x1="16" y1="34" x2="24" y2="34" stroke="#1A6FB5" stroke-width="2"/>
-          </svg>
-        </div>
-        <h3>Educate Adults</h3>
-        <p>Materials and access to references focused on scam awareness, privacy settings, and general online safety.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -1854,7 +1722,7 @@ footer p a:hover { color: var(--accent-orange); }
     <div class="footer-links">
       <a href="#about">About</a>
       <a href="#program">Program</a>
-      <a href="#programs">Engage Kids</a>
+      <a href="#programs">Tracks</a>
       <a href="#activities">Activities</a>
       <a href="#events">Events</a>
       <a href="#contact">Contact</a>
