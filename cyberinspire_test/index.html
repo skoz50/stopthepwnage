@@ -576,6 +576,146 @@ a { text-decoration: none; color: inherit; }
   .curriculum-grid { grid-template-columns: 1fr; }
 }
 
+/* ── Flagship Event ── */
+.flagship-section { background: var(--bg-light); }
+
+.flagship-card {
+  background: var(--bg-white);
+  border-radius: 12px;
+  border-left: 6px solid var(--accent-orange);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  padding: clamp(28px, 4vw, 40px);
+  margin-top: 16px;
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 32px;
+  align-items: stretch;
+}
+
+.flagship-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+}
+
+.flagship-text { display: flex; flex-direction: column; }
+
+.flagship-pullquote {
+  margin-bottom: 28px;
+}
+
+.flagship-eyebrow {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.7rem, 1.1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  margin-bottom: 10px;
+}
+
+.flagship-pullquote p {
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--primary-dark);
+}
+
+.flagship-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+}
+
+.flagship-tagline {
+  color: var(--text-dark);
+  font-size: clamp(0.95rem, 1.4vw, 1.02rem);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.flagship-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.flagship-pill {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  font-size: clamp(0.82rem, 1.2vw, 0.9rem);
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+.flagship-delivered-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 12px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.flagship-delivered { list-style: none; padding: 0; }
+
+.flagship-delivered li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+  font-size: clamp(0.9rem, 1.3vw, 0.95rem);
+  line-height: 1.55;
+}
+
+.flagship-delivered li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.flagship-visual {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 8px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.flagship-visual-icon {
+  font-size: clamp(3.5rem, 7vw, 5rem);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.flagship-visual-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  color: var(--text-white);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 960px) {
+  .flagship-card { grid-template-columns: 1fr; gap: 24px; }
+  .flagship-visual { min-height: 220px; order: 2; }
+}
+
 /* ── Activity Catalog ── */
 .section-eyebrow {
   display: inline-block;
@@ -1070,6 +1210,49 @@ footer p a:hover { color: var(--accent-orange); }
         <span class="option-pill">Annual Event</span>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── Flagship Programs in Action ── -->
+<section class="section flagship-section" id="flagship-event">
+  <div class="container">
+    <div class="section-center fade-in">
+      <span class="section-eyebrow">Program Spotlight</span>
+      <h2 class="section-heading">Flagship Programs in Action</h2>
+      <p class="section-sub">From single-school visits to district-wide events, CyberInspire scales from intimate workshops to full-day signature programs.</p>
+    </div>
+
+    <article class="flagship-card fade-in">
+      <div class="flagship-text">
+        <div class="flagship-pullquote">
+          <span class="flagship-eyebrow">Why This Matters</span>
+          <p>&ldquo;With nearly half of global cyber threats focused on the US &mdash; and only 25% of the cybersecurity workforce being women &mdash; the need to educate and inspire is greater than ever.&rdquo;</p>
+        </div>
+
+        <h3>Careers Beyond the Keyboard</h3>
+        <p class="flagship-tagline">A full-day immersion bringing together girls from every middle and high school in the Muscogee County School District to explore careers across technology and cybersecurity.</p>
+
+        <div class="flagship-pills">
+          <span class="flagship-pill">&#128197; March 7, 2025</span>
+          <span class="flagship-pill">&#128205; Aflac PSA Building, Corporate Ridge</span>
+          <span class="flagship-pill">&#129309; Sponsored by Aflac</span>
+          <span class="flagship-pill">&#127891; Muscogee County School District</span>
+        </div>
+
+        <h4 class="flagship-delivered-heading">What the Day Delivered</h4>
+        <ul class="flagship-delivered">
+          <li>Hands-on cybersecurity activities &mdash; no technical background required</li>
+          <li>Exposure to a range of cybersecurity career paths</li>
+          <li>Direct engagement with women working in the field</li>
+          <li>A welcoming, inspiring environment for the next generation</li>
+        </ul>
+      </div>
+
+      <div class="flagship-visual fade-in" aria-hidden="true">
+        <span class="flagship-visual-icon">&#128272;</span>
+        <span class="flagship-visual-label">Careers Beyond the Keyboard</span>
+      </div>
+    </article>
   </div>
 </section>
 
