@@ -417,6 +417,143 @@ a { text-decoration: none; color: inherit; }
   .tracks-wrapper { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
 }
 
+/* ── Engage Kids Curriculum ── */
+.engage-kids-section {
+  background: var(--primary-dark);
+  padding: clamp(60px, 8vw, 100px) 0;
+}
+
+.engage-kids-section .section-heading {
+  color: var(--text-white);
+}
+
+.engage-kids-section .section-sub {
+  color: rgba(255,255,255,0.8);
+}
+
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+.curriculum-card {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  border-top: 4px solid var(--primary);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.curriculum-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.curriculum-badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.7rem, 1.1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  margin-bottom: 10px;
+}
+
+.curriculum-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.3rem);
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+
+.curriculum-subline {
+  color: var(--text-muted);
+  font-size: clamp(0.85rem, 1.2vw, 0.9rem);
+  font-style: italic;
+  margin-bottom: 18px;
+}
+
+.curriculum-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.curriculum-card li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+  font-size: clamp(0.9rem, 1.3vw, 0.95rem);
+  line-height: 1.55;
+}
+
+.curriculum-card li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 8px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+
+.program-options {
+  margin-top: 48px;
+  text-align: center;
+}
+
+.options-label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  margin-bottom: 20px;
+}
+
+.options-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.option-pill {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid var(--primary-light);
+  border-radius: 999px;
+  color: var(--text-white);
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 500;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.option-pill:hover,
+.option-pill:focus {
+  background: rgba(45,153,214,0.18);
+  outline: none;
+}
+
+@media (max-width: 960px) {
+  .curriculum-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .curriculum-grid { grid-template-columns: 1fr; }
+}
+
 /* ── Activity Catalog ── */
 .section-eyebrow {
   display: inline-block;
@@ -734,6 +871,7 @@ footer p a:hover { color: var(--accent-orange); }
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#program">Program</a></li>
+      <li><a href="#engage-kids">Engage Kids</a></li>
       <li><a href="#activities">Activities</a></li>
       <li><a href="#events">Events</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -747,6 +885,7 @@ footer p a:hover { color: var(--accent-orange); }
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="closeMenu()">About</a>
   <a href="#program" onclick="closeMenu()">Program</a>
+  <a href="#engage-kids" onclick="closeMenu()">Engage Kids</a>
   <a href="#activities" onclick="closeMenu()">Activities</a>
   <a href="#events" onclick="closeMenu()">Events</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
@@ -843,6 +982,68 @@ footer p a:hover { color: var(--accent-orange); }
         </div>
         <h3>Educate Adults</h3>
         <p>Materials and access to references focused on scam awareness, privacy settings, and general online safety.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Engage Kids: Curriculum by Grade ── -->
+<section class="engage-kids-section fade-in" id="engage-kids">
+  <div class="container section-center">
+    <span class="section-eyebrow">Track 1 in Depth</span>
+    <h2 class="section-heading">Engage Kids: Curriculum by Grade</h2>
+    <p class="section-sub">Tailored to where students actually are &mdash; from elementary through high school &mdash; with PTA/PTO partnership tying it together for parents.</p>
+
+    <div class="curriculum-grid">
+
+      <article class="curriculum-card fade-in">
+        <span class="curriculum-badge">Elementary</span>
+        <h3>Grades 3&ndash;5</h3>
+        <p class="curriculum-subline">Plus parents via PTA/PTO</p>
+        <ul>
+          <li>Cyber bullying &amp; online predators</li>
+          <li>Online presence &amp; digital footprint</li>
+          <li>AI &amp; virtual reality basics</li>
+          <li>Scam awareness</li>
+          <li>Password protection</li>
+          <li>PTA/PTO sessions: parental controls, privacy basics, family resources</li>
+        </ul>
+      </article>
+
+      <article class="curriculum-card fade-in">
+        <span class="curriculum-badge">Middle School</span>
+        <h3>Grades 6&ndash;8</h3>
+        <p class="curriculum-subline">Builds on all elementary topics</p>
+        <ul>
+          <li>Cybersecurity skills &amp; career exploration</li>
+          <li>Hands-on interactive activities</li>
+          <li>Among Us: Cyber Edition</li>
+          <li>Hack the Hacker</li>
+        </ul>
+      </article>
+
+      <article class="curriculum-card fade-in">
+        <span class="curriculum-badge">High School</span>
+        <h3>Grades 9&ndash;12</h3>
+        <p class="curriculum-subline">Builds on all middle school topics</p>
+        <ul>
+          <li>Skills, career options &amp; educational pathways</li>
+          <li>Deep-dive into cybersecurity tracks</li>
+          <li>Spotting employment scams</li>
+          <li>Incident response tabletop exercises</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="program-options fade-in">
+      <span class="options-label">Program Options (In-Person)</span>
+      <div class="options-pills">
+        <span class="option-pill">One-Time Events (1&ndash;1.5 hrs)</span>
+        <span class="option-pill">Ongoing (Quarterly)</span>
+        <span class="option-pill">Train the Trainer</span>
+        <span class="option-pill">Bi-Annual Camps (Nominated)</span>
+        <span class="option-pill">Annual Event</span>
       </div>
     </div>
   </div>
@@ -1075,6 +1276,8 @@ footer p a:hover { color: var(--accent-orange); }
     <div class="footer-links">
       <a href="#about">About</a>
       <a href="#program">Program</a>
+      <a href="#engage-kids">Engage Kids</a>
+      <a href="#activities">Activities</a>
       <a href="#events">Events</a>
       <a href="#contact">Contact</a>
     </div>
