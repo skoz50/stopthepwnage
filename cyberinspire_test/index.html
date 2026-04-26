@@ -439,20 +439,237 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 12px;
 }
 
-/* ── Engage Kids Curriculum ── */
-.engage-kids-section {
-  background: var(--primary-dark);
+/* ── Inside the Programs (tabbed) ── */
+.programs-detail {
+  background: var(--bg-light);
   padding: clamp(60px, 8vw, 100px) 0;
 }
 
-.engage-kids-section .section-heading {
+.programs-detail .section-heading,
+.programs-detail .section-sub {
+  text-align: center;
+}
+
+.programs-detail .section-sub {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  margin-top: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  padding: 12px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tab:hover:not(.is-active) {
+  background: rgba(0,0,0,0.03);
+}
+
+.tab--kids:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.tab--girls:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+.tab--adults:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+.tab--kids.is-active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+
+.tab--girls.is-active {
+  color: var(--accent-teal);
+  border-bottom-color: var(--accent-teal);
+  font-weight: 700;
+}
+
+.tab--adults.is-active {
+  color: var(--accent-orange);
+  border-bottom-color: var(--accent-orange);
+  font-weight: 700;
+}
+
+.tab__short { display: inline; }
+.tab__long  { display: none; }
+
+@media (min-width: 640px) {
+  .tab__short { display: none; }
+  .tab__long  { display: inline; }
+}
+
+.panel[hidden] { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel.is-active {
+    animation: panel-fade 150ms ease-out;
+  }
+  @keyframes panel-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* Girls panel */
+.program-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 32px;
+}
+
+.program-card {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.program-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.program-card h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.3rem);
+  color: var(--accent-teal);
+  margin-bottom: 12px;
+}
+
+.program-card p {
+  color: var(--text-dark);
+  font-size: clamp(0.9rem, 1.3vw, 0.95rem);
+  line-height: 1.6;
+}
+
+.callout-strip {
+  background: rgba(245, 152, 42, 0.08);
+  border-left: 4px solid var(--accent-orange);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.callout-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.8rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+}
+
+.callout-body {
+  color: var(--text-dark);
+  font-size: clamp(0.9rem, 1.3vw, 0.95rem);
+}
+
+@media (max-width: 768px) {
+  .program-cards { grid-template-columns: 1fr; }
+}
+
+/* Adults panel */
+.adults-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.adults-col {
+  background: var(--bg-white);
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.adults-col h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.3rem);
+  color: var(--accent-orange);
+  margin-bottom: 16px;
+}
+
+.icon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.icon-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  color: var(--text-dark);
+  font-size: clamp(0.92rem, 1.3vw, 0.98rem);
+}
+
+.icon-list li:last-child { margin-bottom: 0; }
+
+.icon-list .icon {
+  flex-shrink: 0;
+  font-size: 1.15rem;
+  line-height: 1.6;
+}
+
+.adults-cta {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  background: var(--accent-orange);
   color: var(--text-white);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 25px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.engage-kids-section .section-sub {
-  color: rgba(255,255,255,0.8);
+.adults-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(245,152,42,0.4);
 }
 
+@media (max-width: 768px) {
+  .adults-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Engage Kids Curriculum (used inside Kids panel) ── */
 .curriculum-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -555,7 +772,7 @@ a { text-decoration: none; color: inherit; }
   padding: 10px 20px;
   border: 1px solid var(--primary-light);
   border-radius: 999px;
-  color: var(--text-white);
+  color: var(--primary-dark);
   font-size: clamp(0.85rem, 1.2vw, 0.95rem);
   font-weight: 500;
   background: transparent;
@@ -564,7 +781,7 @@ a { text-decoration: none; color: inherit; }
 
 .option-pill:hover,
 .option-pill:focus {
-  background: rgba(45,153,214,0.18);
+  background: rgba(45,153,214,0.12);
   outline: none;
 }
 
@@ -1072,7 +1289,7 @@ footer p a:hover { color: var(--accent-orange); }
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#program">Program</a></li>
-      <li><a href="#engage-kids">Engage Kids</a></li>
+      <li><a href="#programs">Engage Kids</a></li>
       <li><a href="#activities">Activities</a></li>
       <li><a href="#events">Events</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -1086,7 +1303,7 @@ footer p a:hover { color: var(--accent-orange); }
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="closeMenu()">About</a>
   <a href="#program" onclick="closeMenu()">Program</a>
-  <a href="#engage-kids" onclick="closeMenu()">Engage Kids</a>
+  <a href="#programs" onclick="closeMenu()">Engage Kids</a>
   <a href="#activities" onclick="closeMenu()">Activities</a>
   <a href="#events" onclick="closeMenu()">Events</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
@@ -1190,64 +1407,137 @@ footer p a:hover { color: var(--accent-orange); }
   </div>
 </section>
 
-<!-- ── Engage Kids: Curriculum by Grade ── -->
-<section class="engage-kids-section fade-in" id="engage-kids">
-  <div class="container section-center">
-    <span class="section-eyebrow">Track 1 in Depth</span>
-    <h2 class="section-heading">Engage Kids: Curriculum by Grade</h2>
-    <p class="section-sub">Tailored to where students actually are &mdash; from elementary through high school &mdash; with PTA/PTO partnership tying it together for parents.</p>
+<!-- ── Inside the Programs (tabbed) ── -->
+<section class="programs-detail" id="programs">
+  <div class="container fade-in">
+    <h2 class="section-heading">Inside the Programs</h2>
+    <p class="section-sub">A closer look at what each track delivers.</p>
 
-    <div class="curriculum-grid">
-
-      <article class="curriculum-card fade-in">
-        <span class="curriculum-badge">Elementary</span>
-        <h3>Grades 3&ndash;5</h3>
-        <p class="curriculum-subline">Plus parents via PTA/PTO</p>
-        <ul>
-          <li>Cyber bullying &amp; online predators</li>
-          <li>Online presence &amp; digital footprint</li>
-          <li>AI &amp; virtual reality basics</li>
-          <li>Scam awareness</li>
-          <li>Password protection</li>
-          <li>PTA/PTO sessions: parental controls, privacy basics, family resources</li>
-        </ul>
-      </article>
-
-      <article class="curriculum-card fade-in">
-        <span class="curriculum-badge">Middle School</span>
-        <h3>Grades 6&ndash;8</h3>
-        <p class="curriculum-subline">Builds on all elementary topics</p>
-        <ul>
-          <li>Cybersecurity skills &amp; career exploration</li>
-          <li>Hands-on interactive activities</li>
-          <li>Among Us: Cyber Edition</li>
-          <li>Hack the Hacker</li>
-        </ul>
-      </article>
-
-      <article class="curriculum-card fade-in">
-        <span class="curriculum-badge">High School</span>
-        <h3>Grades 9&ndash;12</h3>
-        <p class="curriculum-subline">Builds on all middle school topics</p>
-        <ul>
-          <li>Skills, career options &amp; educational pathways</li>
-          <li>Deep-dive into cybersecurity tracks</li>
-          <li>Spotting employment scams</li>
-          <li>Incident response tabletop exercises</li>
-        </ul>
-      </article>
-
+    <div class="tabs" role="tablist" aria-label="Program tracks">
+      <button class="tab tab--kids is-active" role="tab" id="tab-kids"
+              aria-selected="true" aria-controls="panel-kids" tabindex="0">
+        <span class="tab__short">Kids</span>
+        <span class="tab__long">Engage Kids</span>
+      </button>
+      <button class="tab tab--girls" role="tab" id="tab-girls"
+              aria-selected="false" aria-controls="panel-girls" tabindex="-1">
+        <span class="tab__short">Girls</span>
+        <span class="tab__long">Empower Girls</span>
+      </button>
+      <button class="tab tab--adults" role="tab" id="tab-adults"
+              aria-selected="false" aria-controls="panel-adults" tabindex="-1">
+        <span class="tab__short">Adults</span>
+        <span class="tab__long">Educate Adults</span>
+      </button>
     </div>
 
-    <div class="program-options fade-in">
-      <span class="options-label">Program Options (In-Person)</span>
-      <div class="options-pills">
-        <span class="option-pill">One-Time Events (1&ndash;1.5 hrs)</span>
-        <span class="option-pill">Ongoing (Quarterly)</span>
-        <span class="option-pill">Train the Trainer</span>
-        <span class="option-pill">Bi-Annual Camps (Nominated)</span>
-        <span class="option-pill">Annual Event</span>
+    <!-- KIDS PANEL -->
+    <div class="panel panel--kids is-active" role="tabpanel"
+         id="panel-kids" aria-labelledby="tab-kids">
+      <div class="curriculum-grid">
+
+        <article class="curriculum-card fade-in">
+          <span class="curriculum-badge">Elementary</span>
+          <h3>Grades 3&ndash;5</h3>
+          <p class="curriculum-subline">Plus parents via PTA/PTO</p>
+          <ul>
+            <li>Cyber bullying &amp; online predators</li>
+            <li>Online presence &amp; digital footprint</li>
+            <li>AI &amp; virtual reality basics</li>
+            <li>Scam awareness</li>
+            <li>Password protection</li>
+            <li>PTA/PTO sessions: parental controls, privacy basics, family resources</li>
+          </ul>
+        </article>
+
+        <article class="curriculum-card fade-in">
+          <span class="curriculum-badge">Middle School</span>
+          <h3>Grades 6&ndash;8</h3>
+          <p class="curriculum-subline">Builds on all elementary topics</p>
+          <ul>
+            <li>Cybersecurity skills &amp; career exploration</li>
+            <li>Hands-on interactive activities</li>
+            <li>Among Us: Cyber Edition</li>
+            <li>Hack the Hacker</li>
+          </ul>
+        </article>
+
+        <article class="curriculum-card fade-in">
+          <span class="curriculum-badge">High School</span>
+          <h3>Grades 9&ndash;12</h3>
+          <p class="curriculum-subline">Builds on all middle school topics</p>
+          <ul>
+            <li>Skills, career options &amp; educational pathways</li>
+            <li>Deep-dive into cybersecurity tracks</li>
+            <li>Spotting employment scams</li>
+            <li>Incident response tabletop exercises</li>
+          </ul>
+        </article>
+
       </div>
+
+      <div class="program-options fade-in">
+        <span class="options-label">Program Options (In-Person)</span>
+        <div class="options-pills">
+          <span class="option-pill">One-Time Events (1&ndash;1.5 hrs)</span>
+          <span class="option-pill">Ongoing (Quarterly)</span>
+          <span class="option-pill">Train the Trainer</span>
+          <span class="option-pill">Bi-Annual Camps (Nominated)</span>
+          <span class="option-pill">Annual Event</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GIRLS PANEL -->
+    <div class="panel panel--girls" role="tabpanel" hidden
+         id="panel-girls" aria-labelledby="tab-girls">
+      <div class="program-cards">
+        <article class="program-card">
+          <h3>Flagship Events</h3>
+          <p>Full-day immersive experiences connecting girls with women working in cybersecurity. Past flagship: <em>Careers Beyond the Keyboard</em> at the Aflac PSA Building, March 2025.</p>
+        </article>
+        <article class="program-card">
+          <h3>Camps &amp; Cohorts</h3>
+          <p>Multi-session programs in partnership with organizations like CSU GenCyber Camp and Girls Inc., blending hands-on activities with career exposure.</p>
+        </article>
+        <article class="program-card">
+          <h3>Mentorship &amp; Panels</h3>
+          <p>Direct engagement with women in the field &mdash; panels, Q&amp;A, and ongoing connection points designed to sustain interest after the event ends.</p>
+        </article>
+      </div>
+      <div class="callout-strip">
+        <span class="callout-eyebrow">Coming in 2025</span>
+        <span class="callout-body">A new Empower Girls cohort program &mdash; details to be announced.</span>
+      </div>
+    </div>
+
+    <!-- ADULTS PANEL -->
+    <div class="panel panel--adults" role="tabpanel" hidden
+         id="panel-adults" aria-labelledby="tab-adults">
+      <div class="adults-grid">
+        <div class="adults-col">
+          <h3>What We Cover</h3>
+          <ul class="icon-list">
+            <li><span class="icon" aria-hidden="true">🛡️</span> Scam awareness &amp; social engineering</li>
+            <li><span class="icon" aria-hidden="true">🔒</span> Privacy settings &amp; digital footprint</li>
+            <li><span class="icon" aria-hidden="true">📱</span> Social media safety</li>
+            <li><span class="icon" aria-hidden="true">👨‍👩‍👧</span> Family digital wellness</li>
+            <li><span class="icon" aria-hidden="true">🚨</span> Incident response basics &mdash; what to do if you've been targeted</li>
+          </ul>
+        </div>
+        <div class="adults-col">
+          <h3>How We Deliver</h3>
+          <ul class="icon-list">
+            <li><span class="icon" aria-hidden="true">🏢</span> Community workshops</li>
+            <li><span class="icon" aria-hidden="true">🏫</span> PTA / PTO sessions</li>
+            <li><span class="icon" aria-hidden="true">📘</span> Take-home reference guides</li>
+            <li><span class="icon" aria-hidden="true">💻</span> On-demand resources</li>
+          </ul>
+        </div>
+      </div>
+      <a class="adults-cta" href="#contact">
+        Bring CyberInspire to your organization &rarr;
+      </a>
     </div>
   </div>
 </section>
@@ -1564,7 +1854,7 @@ footer p a:hover { color: var(--accent-orange); }
     <div class="footer-links">
       <a href="#about">About</a>
       <a href="#program">Program</a>
-      <a href="#engage-kids">Engage Kids</a>
+      <a href="#programs">Engage Kids</a>
       <a href="#activities">Activities</a>
       <a href="#events">Events</a>
       <a href="#contact">Contact</a>
@@ -1628,6 +1918,56 @@ var statsObserver = new IntersectionObserver(function(entries) {
 }, { threshold: 0.3 });
 
 statsObserver.observe(statsSection);
+
+/* ── Inside the Programs: tabs ── */
+(function initProgramTabs(){
+  const tabs = document.querySelectorAll('.tabs [role="tab"]');
+  if (!tabs.length) return;
+
+  function activate(tabId, updateHash){
+    tabs.forEach(t => {
+      const isActive = t.id === tabId;
+      t.classList.toggle('is-active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.setAttribute('tabindex', isActive ? '0' : '-1');
+      const panel = document.getElementById(t.getAttribute('aria-controls'));
+      if (panel) {
+        panel.classList.toggle('is-active', isActive);
+        if (isActive) panel.removeAttribute('hidden');
+        else panel.setAttribute('hidden', '');
+      }
+    });
+    if (updateHash) {
+      const slug = tabId.replace('tab-', '');
+      history.replaceState(null, '', '#' + slug);
+    }
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.id, true)));
+
+  const tabsArray = Array.from(tabs);
+  tabsArray.forEach((t, i) => {
+    t.addEventListener('keydown', (e) => {
+      let nextIndex = null;
+      if (e.key === 'ArrowRight') nextIndex = (i + 1) % tabsArray.length;
+      else if (e.key === 'ArrowLeft') nextIndex = (i - 1 + tabsArray.length) % tabsArray.length;
+      else if (e.key === 'Home') nextIndex = 0;
+      else if (e.key === 'End') nextIndex = tabsArray.length - 1;
+      if (nextIndex !== null) {
+        e.preventDefault();
+        const target = tabsArray[nextIndex];
+        activate(target.id, true);
+        target.focus();
+      }
+    });
+  });
+
+  const validHashes = ['#kids', '#girls', '#adults'];
+  const hash = window.location.hash;
+  if (validHashes.includes(hash)) {
+    activate('tab-' + hash.slice(1), false);
+  }
+})();
 </script>
 
 </body>
