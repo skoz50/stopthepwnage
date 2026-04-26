@@ -83,6 +83,31 @@ stopthepwnage/
 - "Survey says" format with cybersecurity topics
 - Click-to-reveal answer mechanic
 
+## CyberInspire Demo Page
+
+A self-contained landing-page demo at `cyberinspire_test/index.html`, accessible only via direct URL at `https://stopthepwnage.com/cyberinspire_test/`. Built as a proof-of-concept for the CyberInspire community outreach program (an Aflac Global Security initiative). **Not part of the game hub** — intentionally not linked from the root `index.html`.
+
+### Conventions specific to this page
+The global StopThePwnage conventions apply (vanilla HTML/CSS/JS, single file, mobile-first, CSS variables only, no localStorage, no build), with these overrides:
+
+- **Does NOT link `/shared/theme.css`** — has its own design tokens inline
+- **Own color palette** — Aflac-inspired blues/orange/teal, NOT the cyberpunk dark theme. Tokens defined in `:root` of `cyberinspire_test/index.html`:
+  - `--primary-dark: #0B3D6B`
+  - `--primary: #1A6FB5`
+  - `--primary-light: #2D99D6`
+  - `--accent-orange: #F5982A`
+  - `--accent-teal: #2ABFA4`
+  - `--bg-light: #F4F7FA`
+  - `--bg-white: #FFFFFF`
+- **Own fonts** — Inter/Poppins for body, Montserrat for headings (Google Fonts CDN). Do NOT use Space Mono or Syne here.
+- **Light, professional aesthetic** — alternating light/dark section backgrounds, rounded corners, subtle shadows. No grid background, no scanline, no terminal styling.
+- **Logo:** `cyberinspire_test/logo.png`
+- **Placeholder images** via `https://placehold.co/`
+- **Contact form is non-functional** — styled only
+
+### Deploy
+Same as the rest of the repo — `git add . && git commit -m "..." && git push origin main`. Amplify auto-deploys.
+
 ## Design System
 
 ### Shared Theme (shared/theme.css)
