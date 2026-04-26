@@ -187,6 +187,17 @@ a { text-decoration: none; color: inherit; }
   max-width: 520px;
 }
 
+.hero-tagline {
+  color: rgba(255,255,255,0.7);
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  font-weight: 400;
+  margin-top: 16px;
+  margin-bottom: 28px;
+  max-width: 520px;
+}
+
+.hero-text p + .hero-tagline { margin-top: 16px; }
+
 .hero-badges {
   display: flex;
   flex-wrap: wrap;
@@ -415,6 +426,17 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 768px) {
   .tracks-wrapper { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+}
+
+/* ── Vision eyebrow (Program section) ── */
+.vision-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-orange);
+  margin-bottom: 12px;
 }
 
 /* ── Engage Kids Curriculum ── */
@@ -898,6 +920,7 @@ footer p a:hover { color: var(--accent-orange); }
       <div class="hero-text">
         <h1>Inspiring the Next Generation of Cyber Defenders</h1>
         <p>Created by Aflac Global Security, Cyber Inspire is an award-winning cybersecurity awareness outreach program empowering local communities surrounding Aflac offices.</p>
+        <p class="hero-tagline">Promoting security awareness across all ages &mdash; and nurturing the next generation of cyber defenders through collaboration, innovative programs, and educational initiatives.</p>
         <div class="hero-badges">
           <span class="badge" style="background: transparent; border: 2px solid var(--accent-teal); color: var(--accent-teal);">&#11088; Award-Winning</span>
           <span class="badge">ENGAGE KIDS</span>
@@ -931,6 +954,7 @@ footer p a:hover { color: var(--accent-orange); }
       </div>
     </div>
     <div style="margin-top: 40px; padding: 32px; border-left: 4px solid var(--accent-orange); background: var(--bg-white); border-radius: 0 8px 8px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
+      <div class="vision-eyebrow">VISION</div>
       <span style="font-family: 'Montserrat', sans-serif; font-size: 3rem; color: var(--accent-orange); line-height: 1; display: block; margin-bottom: 8px;">&ldquo;</span>
       <p style="font-style: italic; font-size: 1.05rem; color: var(--text-dark); line-height: 1.8;">To cultivate a safer, more resilient community where every member is equipped with knowledge and understanding to help protect themselves and others against cyber threats; and where younger members are inspired to be the next generation of cyber defenders.</p>
     </div>
