@@ -500,6 +500,20 @@ a { text-decoration: none; color: inherit; }
   gap: 12px;
 }
 
+.callout-strip--link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.callout-strip--link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(11, 61, 107, 0.12);
+}
+.callout-strip--link:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 3px;
+}
+
 .callout-eyebrow {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(0.72rem, 1vw, 0.8rem);
@@ -1373,7 +1387,7 @@ footer p a:hover { color: var(--accent-orange); }
       <div class="program-cards">
         <article class="program-card">
           <h3>Flagship Events</h3>
-          <p>Full-day immersive experiences connecting girls with women working in cybersecurity. Past flagship: <em>Careers Beyond the Keyboard</em> at the Aflac PSA Building, March 2025.</p>
+          <p>Full-day immersive experiences connecting girls with women working in cybersecurity. Recent flagships: <em>Empower Girls 2026</em> (Columbus Trade Center, April 2026) and <em>Careers Beyond the Keyboard</em> (Aflac Paul S. Amos Campus, March 2025).</p>
         </article>
         <article class="program-card">
           <h3>Camps &amp; Cohorts</h3>
@@ -1384,10 +1398,10 @@ footer p a:hover { color: var(--accent-orange); }
           <p>Direct engagement with women in the field &mdash; panels, Q&amp;A, and ongoing connection points designed to sustain interest after the event ends.</p>
         </article>
       </div>
-      <div class="callout-strip">
-        <span class="callout-eyebrow">Coming in 2025</span>
-        <span class="callout-body">A new Empower Girls cohort program &mdash; details to be announced.</span>
-      </div>
+      <a class="callout-strip callout-strip--link" href="#flagship-event">
+        <span class="callout-eyebrow">See It In Action</span>
+        <span class="callout-body">Empower Girls 2026 brought 800+ girls together at the Columbus Trade Center on April 7, 2026 &mdash; jump to the spotlight &rarr;</span>
+      </a>
     </div>
 
     <!-- ADULTS PANEL -->
@@ -1446,7 +1460,7 @@ footer p a:hover { color: var(--accent-orange); }
           <span class="flagship-pill">&#128205; Columbus Trade Center</span>
           <span class="flagship-pill">&#129309; Presented by Aflac</span>
           <span class="flagship-pill">&#127891; 30+ schools, GA &amp; AL</span>
-          <span class="flagship-pill">&#128101; 800+ girls reached</span>
+          <span class="flagship-pill">&#128101; 800+ girls reached &mdash; up from 250 in 2024</span>
           <span class="flagship-pill">&#128588; ~100 volunteers (Aflac + CSU)</span>
         </div>
 
@@ -1627,31 +1641,6 @@ footer p a:hover { color: var(--accent-orange); }
     <div class="section-center fade-in">
       <h2 class="section-heading">Successful Events</h2>
       <p class="section-sub">Over 5,900 people reached across 20+ events and growing.</p>
-    </div>
-
-    <div class="fade-in">
-      <div class="event-card">
-        <div class="event-accent teal"></div>
-        <div class="event-body">
-          <h3>Empower Girls</h3>
-          <div class="event-date">April 2024</div>
-          <div class="event-pills">
-            <span class="event-pill">250 girls</span>
-            <span class="event-pill">12 schools</span>
-            <span class="event-pill">4 hours</span>
-            <span class="event-pill">3 zones</span>
-            <span class="event-pill">30+ supporters</span>
-            <span class="event-pill activity">Demo</span>
-            <span class="event-pill activity">Interactive</span>
-            <span class="event-pill activity">Inspo</span>
-          </div>
-          <div class="event-images">
-            <img src="https://placehold.co/300x200/2ABFA4/FFFFFF?text=Event+Photo+1" alt="Empower Girls event photo 1">
-            <img src="https://placehold.co/300x200/1A6FB5/FFFFFF?text=Event+Photo+2" alt="Empower Girls event photo 2">
-            <img src="https://placehold.co/300x200/0B3D6B/FFFFFF?text=Event+Photo+3" alt="Empower Girls event photo 3">
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="fade-in">
