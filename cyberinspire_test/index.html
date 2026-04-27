@@ -72,6 +72,22 @@ a { text-decoration: none; color: inherit; }
 
 .nav-logo svg { flex-shrink: 0; }
 
+.nav-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 6px 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-mark img {
+  height: 36px;
+  width: auto;
+  display: block;
+}
+
 .nav-logo span {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
@@ -1216,7 +1232,9 @@ footer p a:hover { color: var(--accent-orange); }
 <nav class="navbar">
   <div class="container nav-inner">
     <a href="#" class="nav-logo">
-      <img src="logo.png" alt="CyberInspire logo" style="height: 40px; width: auto;">
+      <span class="nav-logo-mark">
+        <img src="logo.png" alt="CyberInspire logo">
+      </span>
       <span>CYBERINSPIRE</span>
     </a>
     <ul class="nav-links">
