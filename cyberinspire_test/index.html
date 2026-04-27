@@ -357,6 +357,54 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 12px;
 }
 
+/* ── How It Works (within The Program section) ── */
+.how-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent-orange);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.how-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+  color: var(--primary-dark);
+  text-align: center;
+  margin: 0 0 32px;
+  font-weight: 700;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.how-step h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0 0 12px;
+  font-weight: 700;
+}
+
+.how-step p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .how-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
 /* ── Inside the Programs (tabbed) ── */
 .programs-detail {
   background: var(--bg-light);
@@ -1267,6 +1315,27 @@ footer p a:hover { color: var(--accent-orange); }
           <li>Innovative Programs</li>
           <li>Educational Initiatives</li>
         </ul>
+      </div>
+    </div>
+    <p style="text-align: center; font-style: italic; color: var(--text-muted, #6b7785); font-size: 0.95rem; margin: 48px 0 0;">
+      Operating since 2024 as a non-profit cybersecurity awareness program sponsored by Aflac.
+    </p>
+    <div class="how-it-works fade-in" style="margin-top: 56px;">
+      <div class="how-eyebrow">HOW IT WORKS</div>
+      <h3 class="how-heading">Bringing CyberInspire to your community</h3>
+      <div class="how-grid">
+        <div class="how-step">
+          <h4>Connect</h4>
+          <p>Reach out about your school, organization, or community group. We'll discuss the audience, goals, and what kind of engagement makes sense.</p>
+        </div>
+        <div class="how-step">
+          <h4>Customize</h4>
+          <p>Content is tailored to grade level and audience &mdash; from K&ndash;5 trusted-adults activities to high school career panels to adult scam-awareness workshops. Sessions can be one-time, ongoing, or virtual.</p>
+        </div>
+        <div class="how-step">
+          <h4>Deliver</h4>
+          <p>CyberInspire volunteers &mdash; drawn from Aflac Global Security and partner organizations &mdash; bring the program to your space. Most engagements run from 15 minutes to a full day.</p>
+        </div>
       </div>
     </div>
     <div style="margin-top: 40px; padding: 32px; border-left: 4px solid var(--accent-orange); background: var(--bg-white); border-radius: 0 8px 8px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.06);">
