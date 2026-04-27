@@ -346,6 +346,15 @@ a { text-decoration: none; color: inherit; }
   .program-grid { grid-template-columns: 1fr; }
 }
 
+.program-lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  line-height: 1.75;
+  color: var(--text-dark);
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+
 /* ── Vision eyebrow (Program section) ── */
 .vision-eyebrow {
   font-family: 'Montserrat', sans-serif;
@@ -1304,23 +1313,11 @@ footer p a:hover { color: var(--accent-orange); }
 <section class="section bg-light" id="program">
   <div class="container fade-in">
     <h2 class="section-heading">The Program</h2>
-    <div class="program-grid">
-      <div class="program-text">
-        CyberInspire offers 3 tracks, each with tailored material to best serve the target audience. Offerings are flexible to meet the need of any organization and can be one-time, on-going, and virtual.
-      </div>
-      <div class="program-callout">
-        <p>Promote security awareness amongst all ages and nurture a passion for cyber defense amongst the next generation through:</p>
-        <ul>
-          <li>Collaboration</li>
-          <li>Innovative Programs</li>
-          <li>Educational Initiatives</li>
-        </ul>
-      </div>
-    </div>
-    <p style="text-align: center; font-style: italic; color: var(--text-muted, #6b7785); font-size: 0.95rem; margin: 48px 0 0;">
+    <p class="program-lead">CyberInspire offers 3 tracks, each with tailored material to best serve the target audience. Offerings are flexible to meet the need of any organization and can be one-time, on-going, and virtual.</p>
+    <p style="text-align: center; font-style: italic; color: var(--text-muted, #6b7785); font-size: 0.95rem; margin: 32px 0 0;">
       Operating since 2024 as a non-profit cybersecurity awareness program sponsored by Aflac.
     </p>
-    <div class="how-it-works fade-in" style="margin-top: 56px;">
+    <div class="how-it-works fade-in" style="margin-top: 16px;">
       <div class="how-eyebrow">HOW IT WORKS</div>
       <h3 class="how-heading">Bringing CyberInspire to your community</h3>
       <div class="how-grid">
