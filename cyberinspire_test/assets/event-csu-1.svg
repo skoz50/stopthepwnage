@@ -1,0 +1,18 @@
+<svg viewBox="0 0 300 200" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>CSU GenCyber Camp pattern 1</title>
+<desc>Diagonal hatching with circle accent on teal background.</desc>
+<rect width="300" height="200" fill="#2ABFA4"/>
+<g stroke="#FFFFFF" stroke-width="1.5" opacity="0.4">
+<line x1="-20" y1="40" x2="60" y2="-40"/>
+<line x1="20" y1="60" x2="100" y2="-20"/>
+<line x1="60" y1="80" x2="140" y2="0"/>
+<line x1="100" y1="100" x2="180" y2="20"/>
+<line x1="140" y1="120" x2="220" y2="40"/>
+<line x1="180" y1="140" x2="260" y2="60"/>
+<line x1="220" y1="160" x2="300" y2="80"/>
+<line x1="260" y1="180" x2="320" y2="120"/>
+</g>
+<circle cx="240" cy="50" r="14" fill="#FFFFFF" fill-opacity="0.25"/>
+<circle cx="240" cy="50" r="6" fill="#FFFFFF" fill-opacity="0.6"/>
+<text x="282" y="190" text-anchor="end" fill="#0B3D6B" font-family="monospace" font-size="9" font-weight="700" letter-spacing="2" opacity="0.75">DEMO</text>
+</svg>
