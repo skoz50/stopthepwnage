@@ -1,0 +1,15 @@
+<svg viewBox="0 0 300 200" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Girls Inc pattern 1</title>
+<desc>Concentric ring pattern on orange background.</desc>
+<rect width="300" height="200" fill="#F5982A"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.55">
+<circle cx="80" cy="80" r="20"/>
+<circle cx="80" cy="80" r="35"/>
+<circle cx="80" cy="80" r="50"/>
+<circle cx="220" cy="60" r="15"/>
+<circle cx="220" cy="60" r="28"/>
+<circle cx="240" cy="140" r="18"/>
+<circle cx="240" cy="140" r="32"/>
+</g>
+<text x="282" y="190" text-anchor="end" fill="#0B3D6B" font-family="monospace" font-size="9" font-weight="700" letter-spacing="2" opacity="0.75">DEMO</text>
+</svg>

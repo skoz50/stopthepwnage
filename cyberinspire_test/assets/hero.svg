@@ -1,0 +1,89 @@
+<svg width="100%" viewBox="0 0 680 400" role="img" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+<title>CyberInspire community connection illustration</title>
+<desc>Network of community nodes connected by glowing edges, each node representing a person silhouette in the CyberInspire palette.</desc>
+<defs>
+<linearGradient id="bgD" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#0B3D6B"/>
+<stop offset="1" stop-color="#1A6FB5"/>
+</linearGradient>
+</defs>
+<rect width="680" height="400" fill="url(#bgD)"/>
+<g stroke="#2D99D6" stroke-width="0.5" opacity="0.18" fill="none">
+<line x1="0" y1="100" x2="680" y2="100"/>
+<line x1="0" y1="200" x2="680" y2="200"/>
+<line x1="0" y1="300" x2="680" y2="300"/>
+<line x1="170" y1="0" x2="170" y2="400"/>
+<line x1="340" y1="0" x2="340" y2="400"/>
+<line x1="510" y1="0" x2="510" y2="400"/>
+</g>
+<g stroke="#2ABFA4" stroke-width="1.2" opacity="0.55" fill="none">
+<line x1="120" y1="130" x2="240" y2="200"/>
+<line x1="240" y1="200" x2="120" y2="280"/>
+<line x1="240" y1="200" x2="340" y2="120"/>
+<line x1="240" y1="200" x2="340" y2="280"/>
+<line x1="340" y1="120" x2="450" y2="180"/>
+<line x1="340" y1="280" x2="450" y2="220"/>
+<line x1="450" y1="180" x2="450" y2="220"/>
+<line x1="450" y1="180" x2="560" y2="130"/>
+<line x1="450" y1="220" x2="560" y2="280"/>
+<line x1="560" y1="130" x2="560" y2="280"/>
+<line x1="450" y1="180" x2="340" y2="280"/>
+<line x1="240" y1="200" x2="450" y2="180"/>
+</g>
+<g>
+<g transform="translate(120,130)">
+<circle r="22" fill="#0B3D6B" stroke="#2ABFA4" stroke-width="2.5"/>
+<circle cx="0" cy="-5" r="6" fill="#2ABFA4"/>
+<path d="M-9 13 Q-9 1 0 1 Q9 1 9 13 L9 17 L-9 17 Z" fill="#2ABFA4"/>
+</g>
+<g transform="translate(240,200)">
+<circle r="28" fill="#0B3D6B" stroke="#F5982A" stroke-width="3"/>
+<circle cx="0" cy="-7" r="8" fill="#F5982A"/>
+<path d="M-12 14 Q-12 1 0 1 Q12 1 12 14 L12 19 L-12 19 Z" fill="#F5982A"/>
+</g>
+<g transform="translate(340,120)">
+<circle r="22" fill="#0B3D6B" stroke="#2D99D6" stroke-width="2.5"/>
+<circle cx="0" cy="-5" r="6" fill="#2D99D6"/>
+<path d="M-9 13 Q-9 1 0 1 Q9 1 9 13 L9 17 L-9 17 Z" fill="#2D99D6"/>
+</g>
+<g transform="translate(120,280)">
+<circle r="20" fill="#0B3D6B" stroke="#2ABFA4" stroke-width="2"/>
+<circle cx="0" cy="-4" r="5.5" fill="#2ABFA4"/>
+<path d="M-8 12 Q-8 1 0 1 Q8 1 8 12 L8 16 L-8 16 Z" fill="#2ABFA4"/>
+</g>
+<g transform="translate(340,280)">
+<circle r="22" fill="#0B3D6B" stroke="#F5982A" stroke-width="2.5"/>
+<circle cx="0" cy="-5" r="6" fill="#F5982A"/>
+<path d="M-9 13 Q-9 1 0 1 Q9 1 9 13 L9 17 L-9 17 Z" fill="#F5982A"/>
+</g>
+<g transform="translate(450,180)">
+<circle r="26" fill="#0B3D6B" stroke="#2ABFA4" stroke-width="2.5"/>
+<circle cx="0" cy="-6" r="7" fill="#2ABFA4"/>
+<path d="M-10 14 Q-10 1 0 1 Q10 1 10 14 L10 18 L-10 18 Z" fill="#2ABFA4"/>
+</g>
+<g transform="translate(450,220)">
+<circle r="20" fill="#0B3D6B" stroke="#2D99D6" stroke-width="2"/>
+<circle cx="0" cy="-4" r="5.5" fill="#2D99D6"/>
+<path d="M-8 12 Q-8 1 0 1 Q8 1 8 12 L8 16 L-8 16 Z" fill="#2D99D6"/>
+</g>
+<g transform="translate(560,130)">
+<circle r="22" fill="#0B3D6B" stroke="#F5982A" stroke-width="2.5"/>
+<circle cx="0" cy="-5" r="6" fill="#F5982A"/>
+<path d="M-9 13 Q-9 1 0 1 Q9 1 9 13 L9 17 L-9 17 Z" fill="#F5982A"/>
+</g>
+<g transform="translate(560,280)">
+<circle r="20" fill="#0B3D6B" stroke="#2ABFA4" stroke-width="2"/>
+<circle cx="0" cy="-4" r="5.5" fill="#2ABFA4"/>
+<path d="M-8 12 Q-8 1 0 1 Q8 1 8 12 L8 16 L-8 16 Z" fill="#2ABFA4"/>
+</g>
+</g>
+<g fill="#F5982A" opacity="0.85">
+<circle cx="180" cy="170" r="2.5"/>
+<circle cx="290" cy="155" r="2.5"/>
+<circle cx="395" cy="155" r="2.5"/>
+<circle cx="395" cy="245" r="2.5"/>
+<circle cx="500" cy="200" r="2.5"/>
+</g>
+<text x="630" y="380" text-anchor="end" fill="#F5982A" font-family="monospace" font-size="14" font-weight="700" letter-spacing="3" opacity="0.85">DEMO</text>
+<rect x="585" y="365" width="50" height="20" rx="3" fill="none" stroke="#F5982A" stroke-width="1" opacity="0.6"/>
+</svg>

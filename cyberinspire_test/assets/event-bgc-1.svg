@@ -1,0 +1,16 @@
+<svg viewBox="0 0 300 200" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Boys and Girls Club pattern 1</title>
+<desc>Tight hexagon grid pattern on blue background.</desc>
+<rect width="300" height="200" fill="#1A6FB5"/>
+<g fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity="0.5">
+<polygon points="40,50 60,38 80,50 80,74 60,86 40,74"/>
+<polygon points="80,74 100,62 120,74 120,98 100,110 80,98"/>
+<polygon points="40,98 60,86 80,98 80,122 60,134 40,122"/>
+<polygon points="120,98 140,86 160,98 160,122 140,134 120,122"/>
+<polygon points="160,74 180,62 200,74 200,98 180,110 160,98"/>
+<polygon points="200,98 220,86 240,98 240,122 220,134 200,122"/>
+<polygon points="240,74 260,62 280,74 280,98 260,110 240,98"/>
+<polygon points="200,50 220,38 240,50 240,74 220,86 200,74"/>
+</g>
+<text x="282" y="190" text-anchor="end" fill="#0B3D6B" font-family="monospace" font-size="9" font-weight="700" letter-spacing="2" opacity="0.75">DEMO</text>
+</svg>
