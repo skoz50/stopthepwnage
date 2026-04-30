@@ -1224,6 +1224,7 @@ footer p a {
 footer p a:hover { color: var(--accent-orange); }
 
 .footer-credit { margin-top: 6px; }
+.footer-updated { margin-top: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.3); }
 </style>
 </head>
 <body>
@@ -1782,10 +1783,19 @@ footer p a:hover { color: var(--accent-orange); }
     </div>
     <p>&copy; 2026 CyberInspire. All rights reserved.</p>
     <p class="footer-credit">Site by <a href="https://stopthepwnage.com" target="_blank" rel="noopener">StopThePwnage.com</a></p>
+    <p class="footer-updated">Last updated: <span id="lastUpdated"></span></p>
   </div>
 </footer>
 
 <script>
+/* ── Last updated timestamp ── */
+(function setLastUpdated(){
+  var el = document.getElementById('lastUpdated');
+  if (!el) return;
+  var d = new Date(document.lastModified);
+  el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+})();
+
 /* ── Mobile menu ── */
 function toggleMenu() {
   document.getElementById('mobileMenu').classList.toggle('open');
