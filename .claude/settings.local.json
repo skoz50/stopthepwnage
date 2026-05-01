@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(gh label:*)",
-      "Bash(gh issue:*)",
-      "Bash(git:*)"
-    ]
-  }
-}

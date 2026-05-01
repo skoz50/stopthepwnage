@@ -1,0 +1,7 @@
+# Agent / skill artifacts
+.agents/
+.claude/skills/
+skills-lock.json
+
+# Local Claude Code settings
+.claude/settings.local.json
