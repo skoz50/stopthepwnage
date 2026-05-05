@@ -1075,7 +1075,7 @@ const SCENARIOS = {
     icon: '📱',
     meta: 'Scenario 3 of 5 · App Privacy',
     title: 'Manage App Permissions',
-    desc: 'You just installed a popular flashlight app. It\'s asking for several permissions. Decide which ones to allow or deny — and think about why an app might want access to things it doesn\'t need.',
+    desc: 'An app you just installed is asking for several permissions. Decide which ones to allow or deny — and think about why an app might want access to things it doesn\'t need.',
     steps: 2,
     learnings: [
       'Many free apps monetize by collecting your data — location history, contacts, and microphone access can all be sold to data brokers.',
@@ -1578,23 +1578,116 @@ function revealSenderAnswer() {
 // ============================================================
 //  PERMISSIONS SCENARIO
 // ============================================================
-const PERMISSIONS_DATA = [
-  { icon: '🔦', name: 'Flashlight', needed: true, reason: 'Required to turn on the LED flash.' },
-  { icon: '📍', name: 'Location (Always)', needed: false, reason: 'A flashlight never needs to track where you are. This is a data grab.' },
-  { icon: '📷', name: 'Camera', needed: false, reason: 'The torch function uses the flash LED, not the full camera app. Deny this.' },
-  { icon: '👥', name: 'Contacts', needed: false, reason: 'Absolutely no reason a flashlight needs your contact list. Red flag.' },
-  { icon: '🎙️', name: 'Microphone', needed: false, reason: 'A flashlight listening to you? No. This is surveillance, not a feature.' },
-  { icon: '🔔', name: 'Notifications', needed: false, reason: 'Minimal need — mostly used to send you ads. Deny unless you want notifications.' }
+const PERMISSION_SCENARIOS = [
+  {
+    app: 'Flashlight',
+    icon: '🔦',
+    desc: "You just installed a popular flashlight app. It's asking for several permissions. Decide which ones to allow or deny — and think about why an app might want access to things it doesn't need.",
+    permissions: [
+      { icon: '🔦', name: 'Flashlight', needed: true,  reason: 'Required to turn on the LED flash.' },
+      { icon: '📍', name: 'Location (Always)', needed: false, reason: 'A flashlight never needs to track where you are. This is a data grab.' },
+      { icon: '📷', name: 'Camera', needed: false, reason: 'The torch function uses the flash LED, not the full camera app. Deny this.' },
+      { icon: '👥', name: 'Contacts', needed: false, reason: 'Absolutely no reason a flashlight needs your contact list. Red flag.' },
+      { icon: '🎙️', name: 'Microphone', needed: false, reason: 'A flashlight listening to you? No. This is surveillance, not a feature.' },
+      { icon: '🔔', name: 'Notifications', needed: false, reason: 'Minimal need — mostly used to send you ads. Deny unless you want notifications.' }
+    ],
+    insights: [
+      'Your home and work address can be inferred from location history',
+      'Contacts can be sold to telemarketers or used for targeted ads',
+      'Microphone access could enable passive listening, even when the app is in background',
+      'Camera access on a flashlight app is simply unjustifiable'
+    ]
+  },
+  {
+    app: 'Photo Editor',
+    icon: '🎨',
+    desc: "You just installed a free photo editor with viral filters. It needs some permissions to work — and is asking for others that should make you pause.",
+    permissions: [
+      { icon: '🖼️', name: 'Photos & Media', needed: true,  reason: 'Required to read and edit the photos you choose. This is the core function.' },
+      { icon: '💾', name: 'Storage (Save Edits)', needed: true,  reason: 'Needed to save the edited photo back to your device.' },
+      { icon: '📍', name: 'Precise Location', needed: false, reason: "Editing a photo doesn't require knowing where you are. This is for ad targeting or selling location data." },
+      { icon: '👥', name: 'Contacts', needed: false, reason: "A photo editor doesn't need your contacts. The \"share with friends\" pitch is a data harvest." },
+      { icon: '🎙️', name: 'Microphone', needed: false, reason: "Unless you're recording video with audio, no. Most \"AI features\" don't justify always-on mic access." },
+      { icon: '📞', name: 'Phone State', needed: false, reason: 'Reading your phone number, IMEI, and call status is fingerprinting. Photo editors do not need this.' }
+    ],
+    insights: [
+      'Free photo apps frequently monetize by harvesting metadata, location EXIF, and contact lists',
+      'Some "filter" apps have shipped malware or quietly uploaded your full photo library to overseas servers',
+      "Phone State permission is a known fingerprinting vector — deny it on anything that isn't a phone-call app",
+      'Edited photos can leak location via EXIF data even if you deny location permission to the app'
+    ]
+  },
+  {
+    app: 'Social Media',
+    icon: '📸',
+    desc: "You're installing a popular social media app. It does a lot — posting photos, messaging, stories, reels — so some permissions are legitimate. Others are not.",
+    permissions: [
+      { icon: '📷', name: 'Camera', needed: true,  reason: 'Needed to take photos and record video for posts and stories. Core function.' },
+      { icon: '🎙️', name: 'Microphone', needed: true,  reason: 'Needed to record audio for video posts, reels, and voice messages. Legitimate.' },
+      { icon: '🖼️', name: 'Photos (Selected)', needed: true, reason: 'Needed to upload existing photos. Prefer "Selected Photos" over "All Photos" if your OS offers it.' },
+      { icon: '📍', name: 'Precise Location', needed: false, reason: 'Approximate location for tagging is fine; precise/always location enables tracking your daily movements.' },
+      { icon: '👥', name: 'Contacts', needed: false, reason: '"Find friends" sounds helpful but uploads your entire address book — including people who never agreed to be on the platform.' },
+      { icon: '🔔', name: 'Notifications', needed: true, reason: 'Reasonable for messages and tags. You can also allow this and tune which categories alert you in-app.' },
+      { icon: '🩺', name: 'Health & Fitness', needed: false, reason: 'A social app asking for step count or heart rate is a red flag — that data has no posting use case.' }
+    ],
+    insights: [
+      'Social apps are the textbook case of "some permissions are real, others are surveillance"',
+      'Granting Contacts uploads people who never consented to be on the platform — a privacy harm to your friends, not just you',
+      '"Precise" vs "Approximate" location is a real toggle on modern phones — use Approximate when an app offers both',
+      'iOS and Android both let you grant access to selected photos only; prefer that over full library access'
+    ]
+  },
+  {
+    app: 'Keyboard App',
+    icon: '⌨️',
+    desc: "A custom keyboard app with cool themes wants to be your default keyboard. Keyboards see everything you type — passwords, messages, search queries. Permissions matter a lot here.",
+    permissions: [
+      { icon: '⌨️', name: 'Replace System Keyboard', needed: true, reason: "A keyboard app has to replace the system keyboard to function. This is the trade-off you're making." },
+      { icon: '🌐', name: 'Full Network Access', needed: false, reason: 'A keyboard with internet access can send everything you type to a remote server. Deny — or pick a keyboard that runs offline.' },
+      { icon: '👥', name: 'Contacts', needed: false, reason: 'Some keyboards ask "for autocomplete on names." Most do this fine without uploading your address book.' },
+      { icon: '📍', name: 'Location', needed: false, reason: 'A keyboard does not need location. This is purely for ad targeting or location-tagged data sales.' },
+      { icon: '🎙️', name: 'Microphone', needed: false, reason: "Only allow if you actively use voice-to-text — and prefer the OS's built-in voice input over a third-party keyboard's." },
+      { icon: '💾', name: 'Storage (Read All Files)', needed: false, reason: 'A keyboard has no business reading your entire filesystem. Deny.' }
+    ],
+    insights: [
+      'Keyboards see every password, message, search, and credit card number you type — the trust bar should be very high',
+      'Several popular keyboard apps have been caught logging keystrokes and sending them to remote servers',
+      "Stick to your phone's built-in keyboard when possible; if you need a third-party one, pick a reputable open-source option",
+      "A keyboard that needs network access is one that can exfiltrate everything you type. There's no benign reason for it."
+    ]
+  },
+  {
+    app: "Kids' Game",
+    icon: '🎮',
+    desc: "A free game your kid wants to play is asking for permissions. Games for children are heavily regulated for a reason — most of these asks are not okay.",
+    permissions: [
+      { icon: '🎮', name: 'Storage (Save Game)', needed: true, reason: 'Needed to save game progress locally. Reasonable for any game.' },
+      { icon: '📍', name: 'Precise Location', needed: false, reason: 'A game does not need to know where your child is. This is location selling, full stop.' },
+      { icon: '🎙️', name: 'Microphone', needed: false, reason: "Unless it's a singing game, no. Always-on mic in a kids' game is a serious red flag." },
+      { icon: '📷', name: 'Camera', needed: false, reason: 'A 2D puzzle game does not need camera access. Some apps use this for AR but most uses are unjustified.' },
+      { icon: '👥', name: 'Contacts', needed: false, reason: '"Invite friends to play" is a recruitment harvester. Deny.' },
+      { icon: '💳', name: 'In-App Purchases', needed: false, reason: "For a child's device, deny this at the OS level too. Many \"free\" games are designed around manipulating kids into purchases." },
+      { icon: '📊', name: 'Activity Recognition', needed: false, reason: 'A puzzle game knowing if your child is walking, running, or in a vehicle is intrusive and pointless.' }
+    ],
+    insights: [
+      'COPPA in the US and similar laws elsewhere restrict data collection from children — many "free" kids games skirt or violate these',
+      "In-app purchase access on a child's device should be off at the OS level, regardless of any individual game's settings",
+      "\"Free\" kids' games frequently make money through ads, location selling, and behavioral profiling — not just IAP",
+      'Watch for games that lock progress behind permissions ("grant location to unlock new levels") — that\'s coercive consent'
+    ]
+  }
 ];
 
 function renderPermissionsStep(c, btn) {
   if (currentStep === 0) {
     stepData.permChoices = {};
+    stepData.activePermScenario = PERMISSION_SCENARIOS[Math.floor(Math.random() * PERMISSION_SCENARIOS.length)];
+    const scen = stepData.activePermScenario;
     c.innerHTML = `
       <div class="interaction-zone">
-        <div class="zone-label">A flashlight app is requesting these permissions. Allow or Deny each one.</div>
+        <div class="zone-label">The <b>${scen.app}</b> app is requesting these permissions. Allow or Deny each one.</div>
         <div class="permissions-list" id="permList">
-          ${PERMISSIONS_DATA.map((p, i) => `
+          ${scen.permissions.map((p, i) => `
             <div>
               <div class="permission-item" id="perm-item-${i}">
                 <div class="perm-name">
@@ -1614,11 +1707,12 @@ function renderPermissionsStep(c, btn) {
     `;
     btn.textContent = 'Submit Choices →';
   } else {
+    const scen = stepData.activePermScenario;
     c.innerHTML = `
       <div class="interaction-zone">
         <div class="zone-label">Privacy Insight — What data were you about to give away?</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          ${['Your home and work address can be inferred from location history','Contacts can be sold to telemarketers or used for targeted ads','Microphone access could enable passive listening, even when the app is in background','Camera access on a flashlight app is simply unjustifiable'].map(insight => `
+          ${scen.insights.map(insight => `
             <div style="background:rgba(255,59,92,0.06);border:1px solid rgba(255,59,92,0.2);border-radius:8px;padding:14px 16px;font-size:0.85rem;color:#ffb0bc;line-height:1.6;">
               ⚠️ ${insight}
             </div>
@@ -1944,9 +2038,10 @@ function handlePhishingAction(isLast) {
 
 function handlePermissionsAction(isLast) {
   if (currentStep === 0) {
+    const permissions = stepData.activePermScenario.permissions;
     const choices = stepData.permChoices;
     let correct = 0;
-    PERMISSIONS_DATA.forEach((p, i) => {
+    permissions.forEach((p, i) => {
       const userAllowed = choices[i] === true;
       const isCorrect = (userAllowed === p.needed);
       if (isCorrect) correct++;
@@ -1962,16 +2057,16 @@ function handlePermissionsAction(isLast) {
     });
 
     const pts = correct * 6;
-    const max = PERMISSIONS_DATA.length * 6;
+    const max = permissions.length * 6;
     gameScore.total += pts;
     gameScore.max += max;
     gameScore.details.push({ label: 'Permission Choices', score: pts, max });
 
-    if (correct >= 5) {
-      showFeedback('good', `<b>Great privacy awareness!</b> ${correct}/6 correct. You understand the principle of least privilege — apps should only get what they absolutely need.`);
+    if (correct >= Math.ceil(permissions.length * 0.83)) {
+      showFeedback('good', `<b>Great privacy awareness!</b> ${correct}/${permissions.length} correct. You understand the principle of least privilege — apps should only get what they absolutely need.`);
       updateHealth(5);
     } else {
-      showFeedback('bad', `<b>${correct}/6 correct.</b> Review the explanations above. Granting unnecessary permissions is one of the easiest ways companies collect data you never agreed to share.`);
+      showFeedback('bad', `<b>${correct}/${permissions.length} correct.</b> Review the explanations above. Granting unnecessary permissions is one of the easiest ways companies collect data you never agreed to share.`);
       updateHealth(-15);
     }
 
