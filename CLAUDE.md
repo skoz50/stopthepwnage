@@ -138,6 +138,8 @@ git add . && git commit -m "describe your change" && git push origin main
 /exit
 ```
 
+After each push completes, log the change via the `vault-cc-inbox` skill — writes an entry to `_CC Inbox/StopThePwnage - Change Log.md` in the Obsidian vault for later curator triage.
+
 ### Mac path
 ```bash
 cd ~/ClaudeCode/stopthepwnage && claude
