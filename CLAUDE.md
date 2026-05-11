@@ -8,7 +8,8 @@ No frameworks, no backend, no build step.
 ## Stack
 - **Frontend:** Vanilla HTML/CSS/JS — each game is a single `index.html` in its own directory
 - **Shared styles:** `shared/theme.css` — design tokens, grid background, scanline overlay, fonts
-- **Fonts:** Google Fonts CDN — Space Mono (monospace/code feel) + Syne (display headings)
+- **Fonts:** Self-hosted woff2 in `shared/fonts/` — Space Mono (400/700 static) + Syne (variable file covering 400/600/800). Vendored from Google Fonts on May 11, 2026 for offline portability (commit 27d6150). Licenses: Apache 2.0 (Space Mono) / OFL 1.1 (Syne).
+- **External dependencies:** None. All assets self-hosted in the repo. No CDN imports, no analytics, no third-party JS. This is a hard rule — the site must render fully offline for SAFE school visits with unreliable internet.
 - **Hosting:** AWS Amplify — GitHub-connected, auto-deploys on push to `main`
 - **DNS:** Cloudflare — CNAME pointing to Amplify-generated domain
 - **Repo:** https://github.com/skoz50/stopthepwnage
@@ -17,27 +18,34 @@ No frameworks, no backend, no build step.
 ## File Structure
 ```
 stopthepwnage/
-├── CLAUDE.md                ← you are here
-├── LICENSE                  ← MIT (StopThePwnage Contributors)
-├── README.md                ← public-facing project description
-├── index.html               ← hub page (game picker)
+├── CLAUDE.md          ← you are here
+├── LICENSE            ← MIT (StopThePwnage Contributors)
+├── README.md          ← public-facing project description
+├── index.html         ← hub page (game picker, fullscreen button)
 ├── shared/
-│   └── theme.css            ← shared design tokens & base styles
+│   ├── theme.css      ← shared design tokens + base cyberpunk styling
+│   └── fonts/
+│       ├── space-mono-400.woff2
+│       ├── space-mono-700.woff2
+│       ├── syne-variable.woff2
+│       └── LICENSE-FONTS.md
 ├── dataguard/
-│   └── index.html           ← DataGuard scenario game (solo, self-paced)
+│   └── index.html     ← DataGuard scenario game (5 scenarios)
 ├── jeopardy/
-│   └── index.html           ← Exploit Jeopardy (instructor-led, group)
+│   └── index.html     ← Exploit Jeopardy (instructor-led trivia)
 └── feud/
-    └── index.html           ← Hacked Feud (instructor-led, group or solo)
+    └── index.html     ← Hacked Feud (team battle + solo modes)
 ```
 
 ## Games
 
 ### Hub (root index.html)
-- Game card grid linking to each game
+- Game card grid linking to each game (DataGuard, Exploit Jeopardy, Hacked Feud) plus a Coming Soon card (Spot the Deepfake)
 - Visual badges on cards: "Solo" / "Instructor-Led"
-- Coming Soon placeholder cards for future games
 - Same cyberpunk aesthetic as all sub-games
+- Hosts the **fullscreen toggle button** used for SAFE school-visit projector setup. Click once on the hub before navigating into a game.
+- Fullscreen state persists across same-origin navigation, so one click keeps fullscreen active when entering any game. ESC exits everywhere.
+- Navigation between hub and games is plain `<a href>` links — no SPA routing.
 
 ### DataGuard (`/dataguard/`) — Scenario Game
 - **Type:** Solo, self-paced
@@ -110,9 +118,9 @@ Link the shared theme first: `<link rel="stylesheet" href="/shared/theme.css">`
 
 ## Coding Conventions
 - **No frameworks.** Vanilla only — no React, no Vue, no bundler.
-- **No external JS.** Google Fonts CDN is the only external dependency allowed.
-- **Single file per game.** All game-specific CSS in `<style>`, all JS in `<script>` within that game's `index.html`.
-- **Shared theme via CSS file.** Base tokens and visual identity in `shared/theme.css`, linked from every page.
+- **No external dependencies.** All assets self-hosted in the repo (fonts in `shared/fonts/`, CSS in `shared/theme.css`, game JS inline in each `index.html`). No CDN imports, no analytics scripts, no third-party JS. The site must render fully offline.
+- **Always serve via localhost, never `file://`.** For local dev and school visits, run `python3 -m http.server 8000` from the repo root, then open `http://localhost:8000`. Opening `index.html` directly via double-click (`file://...`) breaks the site because (a) absolute paths like `/shared/theme.css` and `/dataguard/` don't resolve, and (b) the Fullscreen API used by the hub fullscreen button is unreliable on `file://` URLs. The localhost-server workflow is mandatory, not optional.
+- **Single file per game.** All CSS in `<style>`, all JS in `<script>` inside each game's `index.html` — do not split. Shared design tokens live in `shared/theme.css` (linked from every page), not duplicated inline.
 - **CSS variables only.** Never hardcode a color — always use a `--variable`.
 - **Mobile-first.** All new UI must work at 375px. Use `clamp()` for font sizes.
 - **Accessibility.** Interactive elements need visible focus states. Semantic HTML where possible.
