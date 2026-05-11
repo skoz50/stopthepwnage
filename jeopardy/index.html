@@ -341,6 +341,12 @@
 </style>
 </head>
 <body>
+<button id="fullscreenBtn" class="fullscreen-btn" type="button" aria-label="Enter fullscreen presentation mode" title="Present mode (ESC to exit)">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+    <path fill="currentColor" d="M5 5h5v2H7v3H5V5zm9 0h5v5h-2V7h-3V5zM5 14h2v3h3v2H5v-5zm12 0h2v5h-5v-2h3v-3z"/>
+  </svg>
+</button>
+
 <div class="bg-grid"></div>
 
 <div class="game-wrap" id="app">
@@ -605,6 +611,27 @@ function escHtml(str) {
    ============================================================ */
 renderBoard();
 renderScoreboard();
+</script>
+<script>
+  (function() {
+    const btn = document.getElementById('fullscreenBtn');
+    if (!btn) return;
+
+    if (!document.documentElement.requestFullscreen) {
+      btn.style.display = 'none';
+      return;
+    }
+
+    btn.addEventListener('click', function() {
+      document.documentElement.requestFullscreen().catch(function(err) {
+        console.warn('Fullscreen request failed:', err);
+      });
+    });
+
+    document.addEventListener('fullscreenchange', function() {
+      btn.style.display = document.fullscreenElement ? 'none' : '';
+    });
+  })();
 </script>
 </body>
 </html>
