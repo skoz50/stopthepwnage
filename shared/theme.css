@@ -94,3 +94,34 @@ body::after {
   0% { transform: translateY(0); }
   100% { transform: translateY(40px); }
 }
+
+/* Fullscreen toggle button — used on hub for SAFE school visit projector setup */
+.fullscreen-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fullscreen-btn:hover,
+.fullscreen-btn:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+  outline: none;
+}
+
+.fullscreen-btn:active {
+  transform: translateY(1px);
+}
