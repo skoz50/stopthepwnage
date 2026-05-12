@@ -45,7 +45,43 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .main-grid { padding-bottom: 8px; }
+
+  /* Kids track section */
+  .kids-section {
+    margin-top: 40px;
+    padding-top: 32px;
     padding-bottom: 60px;
+    border-top: 1px solid var(--border);
+  }
+
+  .kids-section-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .kids-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+
+  .kids-section-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  .kids-grid {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin: 0 auto;
   }
 
   @media (min-width: 600px) {
@@ -192,7 +228,7 @@
     <p class="hub-tagline">Cybersecurity awareness through play</p>
   </header>
 
-  <div class="game-grid">
+  <div class="game-grid main-grid">
     <a href="/dataguard/" class="game-card">
       <span class="card-badge badge-solo">Solo</span>
       <span class="card-icon">&#x1F6E1;&#xFE0F;</span>
@@ -224,6 +260,20 @@
       <span class="card-desc">Can you tell what's real? Test your ability to detect AI-generated deception.</span>
     </div>
   </div>
+
+  <section class="kids-section">
+    <div class="kids-section-header">
+      <div class="kids-section-label">// Kids Track</div>
+      <div class="kids-section-sub">Same hacker vibes, made for younger learners.</div>
+    </div>
+    <div class="game-grid kids-grid">
+      <a href="/kids/" class="game-card">
+        <span class="card-icon">&#x1F3AE;</span>
+        <span class="card-name">Kids Zone</span>
+        <span class="card-desc">Cybersecurity for kids. Same hacker vibes, grade-appropriate content.</span>
+      </a>
+    </div>
+  </section>
 
   <footer class="hub-footer">
     <span>StopThePwnage.com</span>

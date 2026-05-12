@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Zone — StopThePwnage</title>
+<link rel="stylesheet" href="/shared/theme.css">
+<style>
+  #app {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+  }
+
+  /* Screens */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Back link */
+  .back-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  /* Splash hero */
+  .splash-hero {
+    text-align: center;
+    padding: 60px 0 40px;
+  }
+
+  .splash-icon {
+    font-size: 5rem;
+    display: block;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 0 30px rgba(0,229,255,0.5));
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0,229,255,0.4)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(0,229,255,0.7)); }
+  }
+
+  .splash-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .splash-title .highlight { color: var(--accent); }
+
+  .splash-sub {
+    color: var(--muted);
+    font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+    margin-bottom: 48px;
+    max-width: 500px;
+    margin-inline: auto;
+    font-family: 'Space Mono', monospace;
+    line-height: 1.6;
+  }
+
+  .picker-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  /* Scenario grid + cards */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .scenario-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scenario-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .scenario-card:hover, .scenario-card:focus-visible {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: var(--glow);
+    outline: none;
+  }
+
+  .scenario-card:hover::before { opacity: 1; }
+
+  .scenario-card .card-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .scenario-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .scenario-card p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .scenario-card.disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .soon-tag {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(100,116,139,0.15);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Proctored toggle */
+  .proctored-toggle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+
+  .proctored-toggle:hover { color: var(--accent); }
+  .proctored-toggle.active { color: var(--accent); }
+
+  /* Placeholder screen */
+  .placeholder-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 60px 32px;
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .placeholder-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 20px rgba(0,229,255,0.4));
+  }
+
+  .placeholder-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 800;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .placeholder-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 460px;
+    margin: 0 auto 28px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--muted);
+    color: var(--text);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .scenario-grid { grid-template-columns: 1fr; }
+    .splash-title { font-size: 2rem; }
+    .placeholder-wrap { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<button id="fullscreenBtn" class="fullscreen-btn" type="button" aria-label="Enter fullscreen presentation mode" title="Present mode (ESC to exit)">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+    <path fill="currentColor" d="M5 5h5v2H7v3H5V5zm9 0h5v5h-2V7h-3V5zM5 14h2v3h3v2H5v-5zm12 0h2v5h-5v-2h3v-3z"/>
+  </svg>
+</button>
+
+<div id="app">
+  <!-- ========== SPLASH SCREEN ========== -->
+  <div id="splashScreen" class="screen active">
+    <a href="/" class="back-link">&larr; Back to Hub</a>
+    <div class="splash-hero">
+      <span class="splash-icon">&#x1F3AE;</span>
+      <h1 class="splash-title">
+        Kids <span class="highlight">Zone</span>
+      </h1>
+      <p class="splash-sub">
+        Hacker-style cybersecurity challenges, built for younger learners.
+      </p>
+    </div>
+
+    <p class="picker-label">Pick a challenge to begin</p>
+
+    <div class="scenario-grid">
+      <div class="scenario-card" onclick="startScenario('password')" tabindex="0" role="button">
+        <span class="card-icon">&#x1F510;</span>
+        <h3>Build a Better Password</h3>
+        <p>Pick a password the bad guys can't guess — and learn what makes one strong.</p>
+      </div>
+
+      <div class="scenario-card disabled" aria-disabled="true">
+        <span class="soon-tag">Coming Soon</span>
+        <span class="card-icon">&#x1F3A3;</span>
+        <h3>Phishing for Kids</h3>
+        <p>Spot the fake messages trying to trick you out of your info.</p>
+      </div>
+
+      <div class="scenario-card disabled" aria-disabled="true">
+        <span class="soon-tag">Coming Soon</span>
+        <span class="card-icon">&#x1F47E;</span>
+        <h3>Stranger Danger Online</h3>
+        <p>Tell the difference between a real friend and a stranger in disguise.</p>
+      </div>
+
+      <div class="scenario-card disabled" aria-disabled="true">
+        <span class="soon-tag">Coming Soon</span>
+        <span class="card-icon">&#x1F4E4;</span>
+        <h3>Safe Sharing</h3>
+        <p>Decide what's safe to post online — and what should always stay private.</p>
+      </div>
+    </div>
+
+    <button class="proctored-toggle" id="proctoredToggle" onclick="toggleProctoredMode()">Enable Proctored Mode</button>
+  </div>
+
+  <!-- ========== PLACEHOLDER SCREEN ========== -->
+  <div id="placeholderScreen" class="screen">
+    <button type="button" class="back-link" onclick="goHome()">&larr; Back to Kids Zone</button>
+    <div class="placeholder-wrap">
+      <span class="placeholder-icon">&#x1F6E0;&#xFE0F;</span>
+      <h2 class="placeholder-title">Coming soon</h2>
+      <p class="placeholder-desc">
+        First kids scenario lands in the next push.
+      </p>
+      <button type="button" class="btn btn-ghost" onclick="goHome()">&larr; Back to Kids Zone</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let proctoredMode = false;
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function startScenario(_id) {
+    showScreen('placeholderScreen');
+  }
+
+  function goHome() {
+    showScreen('splashScreen');
+  }
+
+  function toggleProctoredMode() {
+    proctoredMode = !proctoredMode;
+    const toggle = document.getElementById('proctoredToggle');
+    toggle.textContent = proctoredMode ? 'Disable Proctored Mode' : 'Enable Proctored Mode';
+    toggle.className = 'proctored-toggle' + (proctoredMode ? ' active' : '');
+  }
+
+  document.querySelectorAll('.scenario-card[role="button"]').forEach(card => {
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+</script>
+
+<script>
+  (function() {
+    const btn = document.getElementById('fullscreenBtn');
+    if (!btn) return;
+
+    if (!document.documentElement.requestFullscreen) {
+      btn.style.display = 'none';
+      return;
+    }
+
+    btn.addEventListener('click', function() {
+      document.documentElement.requestFullscreen().catch(function(err) {
+        console.warn('Fullscreen request failed:', err);
+      });
+    });
+
+    document.addEventListener('fullscreenchange', function() {
+      btn.style.display = document.fullscreenElement ? 'none' : '';
+    });
+  })();
+</script>
+</body>
+</html>
