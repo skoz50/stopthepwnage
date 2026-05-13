@@ -431,8 +431,10 @@
   }
 
   .burglar-stage {
+    position: relative;
     display: flex;
     justify-content: center;
+    min-height: 140px;
     margin-bottom: 24px;
     color: var(--danger);
   }
@@ -441,6 +443,168 @@
     width: 110px;
     height: 140px;
     filter: drop-shadow(0 0 24px rgba(255,59,92,0.55));
+  }
+
+  /* FR-018: burglar grab animation */
+  .burglar-anim {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 140px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .burglar-silhouette {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+
+  .thief-hand {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    width: 460px;
+    height: 110px;
+    color: var(--danger);
+    filter: drop-shadow(0 0 22px rgba(255,59,92,0.6)) drop-shadow(0 4px 10px rgba(0,0,0,0.55));
+    transform: translateX(-500px) rotate(-4deg);
+    transform-origin: 0% 50%;
+    display: none;
+    pointer-events: none;
+  }
+
+  .loot-chip {
+    position: absolute;
+    top: 56px;
+    left: 405px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--danger);
+    background: rgba(255,59,92,0.22);
+    border: 1px solid rgba(255,59,92,0.55);
+    border-radius: 3px;
+    padding: 2px 6px;
+    letter-spacing: 0.18em;
+    transform: translateX(-140px) rotate(2deg) scale(0.7);
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .skip-anim {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    background: rgba(10,14,26,0.65);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: color 0.2s, border-color 0.2s;
+    z-index: 3;
+    display: none;
+  }
+
+  .skip-anim:hover, .skip-anim:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
+    outline: none;
+  }
+
+  /* Default end state: password & callout invisible but layout space reserved */
+  .stolen-callout, .stolen-password {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  /* While animating: show & run the grab keyframes */
+  .breach-wrap.animating .burglar-silhouette {
+    opacity: 0;
+    animation: silhouette-fade 0.35s ease-out 0.85s forwards;
+  }
+  .breach-wrap.animating .thief-hand {
+    display: block;
+    animation: hand-grab 1.2s ease-in-out 0s forwards;
+  }
+  .breach-wrap.animating .loot-chip {
+    display: block;
+    animation: loot-grab 1.2s ease-in-out 0s forwards;
+  }
+  .breach-wrap.animating .skip-anim {
+    display: inline-block;
+  }
+  .breach-wrap.animating .stolen-callout,
+  .breach-wrap.animating .stolen-password {
+    visibility: visible;
+  }
+  .breach-wrap.animating .stolen-callout {
+    animation: callout-flee 1.2s ease-in-out 0s forwards;
+  }
+  .breach-wrap.animating .stolen-password {
+    animation: stolen-flee 1.2s ease-in-out 0s forwards;
+  }
+
+  @keyframes hand-grab {
+    0%, 25%  { transform: translateX(-500px) rotate(-4deg); }
+    45%      { transform: translateX(-160px) rotate(-1deg); }
+    55%      { transform: translateX(-140px) rotate(2deg); }
+    62%      { transform: translateX(-140px) rotate(2deg); }
+    100%     { transform: translateX(-500px) rotate(-6deg); }
+  }
+
+  @keyframes loot-grab {
+    0%, 55%  { opacity: 0; transform: translateX(-140px) rotate(2deg) scale(0.65); }
+    62%      { opacity: 1; transform: translateX(-140px) rotate(2deg) scale(1); }
+    100%     { opacity: 0.9; transform: translateX(-500px) rotate(-6deg) scale(0.85); }
+  }
+
+  @keyframes silhouette-fade {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  @keyframes stolen-flee {
+    0%, 55%  { opacity: 1; transform: translateX(0) translateY(0) rotate(0deg); }
+    62%      { opacity: 1; transform: translateX(-22px) translateY(-14px) rotate(-5deg); }
+    100%     { opacity: 0; transform: translateX(-180px) translateY(-50px) rotate(-16deg); }
+  }
+
+  @keyframes callout-flee {
+    0%, 55%  { opacity: 1; transform: translateX(0); }
+    100%     { opacity: 0; transform: translateX(-70px) translateY(-20px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .burglar-silhouette,
+    .thief-hand,
+    .loot-chip,
+    .stolen-callout,
+    .stolen-password {
+      animation: none !important;
+    }
+    .breach-wrap.animating .thief-hand,
+    .breach-wrap.animating .loot-chip,
+    .breach-wrap.animating .skip-anim {
+      display: none !important;
+    }
+    .breach-wrap.animating .burglar-silhouette {
+      opacity: 1 !important;
+      transform: translateX(-50%) !important;
+    }
+    .breach-wrap.animating .stolen-callout,
+    .breach-wrap.animating .stolen-password {
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
   }
 
   .breach-heading {
@@ -711,29 +875,72 @@
   <div id="breachScreen" class="screen">
     <div class="breach-wrap">
       <div class="burglar-stage">
-        <!-- FR-018: animation swap point — replace this static SVG with the animated burglar -->
-        <svg class="burglar-svg" viewBox="0 0 100 130" role="img" aria-label="Hooded hacker silhouette">
-          <!-- Cloak body -->
-          <path fill="currentColor" d="M 50 38
-            C 30 38 22 58 22 78
-            L 14 125
-            L 86 125
-            L 78 78
-            C 78 58 70 38 50 38 Z"/>
-          <!-- Hood -->
-          <path fill="currentColor" d="M 50 8
-            C 28 8 18 30 22 56
-            C 24 60 30 56 38 54
-            C 44 53 47 53 50 53
-            C 53 53 56 53 62 54
-            C 70 56 76 60 78 56
-            C 82 30 72 8 50 8 Z"/>
-          <!-- Face shadow inside hood -->
-          <ellipse cx="50" cy="38" rx="16" ry="20" fill="rgba(0,0,0,0.55)"/>
-          <!-- Eye glints -->
-          <circle cx="43" cy="36" r="1.6" fill="currentColor" opacity="0.85"/>
-          <circle cx="57" cy="36" r="1.6" fill="currentColor" opacity="0.85"/>
-        </svg>
+        <!-- FR-018: animation swap point — animated grab sequence (hand → loot → silhouette) -->
+        <div class="burglar-anim" id="burglarAnim">
+          <!-- Thief hand — impossibly long bony arm stretches in from off-screen left -->
+          <svg class="thief-hand" viewBox="0 0 460 110" aria-hidden="true">
+            <!-- Long tapered forearm — trails ~350px back into the dark -->
+            <path fill="currentColor" d="M 0 51 L 80 50 L 160 47 L 240 44 L 320 41 L 350 42 L 350 68 L 320 69 L 240 66 L 160 63 L 80 60 L 0 59 Z"/>
+            <!-- Sinew shadows along the forearm -->
+            <path fill="currentColor" opacity="0.35" d="M 40 49 L 200 45 L 200 47 L 40 51 Z"/>
+            <path fill="currentColor" opacity="0.35" d="M 40 61 L 200 63 L 200 65 L 40 63 Z"/>
+            <!-- Wrist joint bumps -->
+            <circle cx="345" cy="40" r="3" fill="currentColor"/>
+            <circle cx="345" cy="72" r="3" fill="currentColor"/>
+            <!-- Palm — gaunt and angular -->
+            <path fill="currentColor" d="M 355 24 C 378 18 400 28 405 52 C 400 84 378 92 355 88 Z"/>
+            <!-- Pinky (top, hooked outward) -->
+            <path fill="currentColor" d="M 388 22 L 418 12 L 436 12 Q 444 18 436 24 L 412 32 L 388 30 Z"/>
+            <circle cx="416" cy="20" r="2.2" fill="currentColor"/>
+            <!-- Ring finger -->
+            <path fill="currentColor" d="M 392 34 L 422 26 L 444 26 Q 450 32 444 40 L 418 46 L 392 44 Z"/>
+            <circle cx="422" cy="34" r="2.2" fill="currentColor"/>
+            <!-- Middle finger — longest, knife-straight -->
+            <path fill="currentColor" d="M 394 48 L 432 44 L 454 48 Q 458 52 454 56 L 432 60 L 394 58 Z"/>
+            <circle cx="430" cy="50" r="2.2" fill="currentColor"/>
+            <!-- Index finger -->
+            <path fill="currentColor" d="M 392 60 L 426 62 L 450 68 Q 454 74 446 76 L 422 74 L 392 70 Z"/>
+            <circle cx="424" cy="66" r="2.2" fill="currentColor"/>
+            <!-- Thumb (curls back under, claw down) -->
+            <path fill="currentColor" d="M 376 76 L 394 92 Q 390 104 374 102 L 364 88 Z"/>
+            <circle cx="380" cy="84" r="2.2" fill="currentColor"/>
+          </svg>
+          <!-- Loot — the stolen password, appears in the hand at the grab moment -->
+          <div class="loot-chip" aria-hidden="true">&bull;&bull;&bull;&bull;&bull;&bull;</div>
+          <!-- Hooded silhouette — fades in at the end, holding the loot bag -->
+          <svg class="burglar-svg burglar-silhouette" viewBox="0 0 100 130" role="img" aria-label="Hooded hacker silhouette holding stolen password">
+            <!-- Cloak body -->
+            <path fill="currentColor" d="M 50 38
+              C 30 38 22 58 22 78
+              L 14 125
+              L 86 125
+              L 78 78
+              C 78 58 70 38 50 38 Z"/>
+            <!-- Hood -->
+            <path fill="currentColor" d="M 50 8
+              C 28 8 18 30 22 56
+              C 24 60 30 56 38 54
+              C 44 53 47 53 50 53
+              C 53 53 56 53 62 54
+              C 70 56 76 60 78 56
+              C 82 30 72 8 50 8 Z"/>
+            <!-- Face shadow inside hood -->
+            <ellipse cx="50" cy="38" rx="16" ry="20" fill="rgba(0,0,0,0.55)"/>
+            <!-- Eye glints -->
+            <circle cx="43" cy="36" r="2.2" fill="currentColor" opacity="1"/>
+            <circle cx="57" cy="36" r="2.2" fill="currentColor" opacity="1"/>
+            <!-- Loot bag clutched at chest -->
+            <path fill="rgba(0,0,0,0.5)" stroke="currentColor" stroke-width="1.2" d="M 38 80 L 62 80 L 64 102 L 36 102 Z"/>
+            <!-- Tied neck on the bag -->
+            <path fill="currentColor" d="M 45 76 L 55 76 L 53 82 L 47 82 Z"/>
+            <!-- Tiny stolen-password dots inside the bag -->
+            <circle cx="44" cy="92" r="1.6" fill="currentColor" opacity="0.9"/>
+            <circle cx="50" cy="92" r="1.6" fill="currentColor" opacity="0.9"/>
+            <circle cx="56" cy="92" r="1.6" fill="currentColor" opacity="0.9"/>
+          </svg>
+          <!-- Skip control — visible from frame 1, hides at end state -->
+          <button class="skip-anim" type="button" onclick="skipBurglarAnim()" aria-label="Skip animation">Skip &rsaquo;</button>
+        </div>
         <!-- /FR-018 -->
       </div>
 
@@ -1078,6 +1285,38 @@
       }
     });
   });
+
+  // ============================================================
+  //  FR-018: burglar grab animation orchestration
+  // ============================================================
+  (function() {
+    const breachScreen = document.getElementById('breachScreen');
+    if (!breachScreen) return;
+    const breachWrap = breachScreen.querySelector('.breach-wrap');
+    if (!breachWrap) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let endTimer = null;
+
+    function endAnim() {
+      if (endTimer) { clearTimeout(endTimer); endTimer = null; }
+      breachWrap.classList.remove('animating');
+    }
+
+    function startAnim() {
+      endAnim();
+      if (reduced.matches) return;
+      void breachWrap.offsetWidth; // force reflow so animations restart on replay
+      breachWrap.classList.add('animating');
+      endTimer = setTimeout(endAnim, 1300);
+    }
+
+    window.skipBurglarAnim = endAnim;
+
+    new MutationObserver(() => {
+      if (breachScreen.classList.contains('active')) startAnim();
+      else endAnim();
+    }).observe(breachScreen, { attributes: true, attributeFilter: ['class'] });
+  })();
 </script>
 
 <script>
